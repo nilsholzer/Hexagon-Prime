@@ -1,0 +1,189 @@
+package edu.kit.kastel.model.logic;
+
+import edu.kit.kastel.model.entity.Hexagon;
+import edu.kit.kastel.model.entity.Vector2D;
+import edu.kit.kastel.model.exceptions.PlaceException;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+
+/**
+ * A game board of a game of hex.
+ * @author uhquw
+ * @version 1.0.0
+ */
+public class GameBoard {
+    private static final String WHITESPACE = " ";
+    private final int size;
+    private final Hexagon[][] gameBoard;
+    private final boolean[][] depthFirstSearchArray;
+    /**
+     * Constructs a new game board of a game of hex.
+     * @param size the size of the game board
+     */
+    public GameBoard(final int size) {
+        this.size = size;
+        gameBoard = new Hexagon[this.size][this.size];
+        depthFirstSearchArray = new boolean[this.size][this.size];
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                gameBoard[row][column] = Hexagon.PLACEABLE;
+                depthFirstSearchArray[row][column] = false;
+            }
+        }
+    }
+    private List<Vector2D> getNeighbours(final Vector2D coordinates) {
+        int xPos = coordinates.getxPos();
+        int yPos = coordinates.getyPos();
+        List<Vector2D> neighbours = new ArrayList<>();
+        if (xPos > 0) {
+            neighbours.add(new Vector2D(xPos - 1, yPos));
+            if (yPos < size - 1) {
+                neighbours.add(new Vector2D(xPos - 1, yPos + 1));
+            }
+        }
+        if (xPos < this.size - 1) {
+            neighbours.add(new Vector2D(xPos + 1, yPos));
+            if (yPos > 0) {
+                neighbours.add(new Vector2D(xPos + 1, yPos - 1));
+            }
+        }
+        if (yPos > 0) {
+            neighbours.add(new Vector2D(xPos, yPos - 1));
+        }
+        if (yPos < this.size - 1) {
+            neighbours.add(new Vector2D(xPos, yPos + 1));
+        }
+        return neighbours;
+    }
+    /**
+     * Prints the game board and all its hexagons.
+     * @return A visualization of the game board and its hexagons
+     */
+    public String print() {
+        StringBuilder print = new StringBuilder();
+        for (int row = 0; row < size; row++) {
+            print.append(WHITESPACE.repeat(row));
+            for (int column = 0; column < size; column++) {
+                print.append(gameBoard[row][column].getSymbol());
+                if (column < size - 1) {
+                    print.append(WHITESPACE);
+                }
+            }
+            if (row < size - 1) {
+                print.append(System.lineSeparator());
+            }
+        }
+        return print.toString();
+    }
+    /**
+     * Places a token on the game board, if no other token is on that hexagon.
+     * @param coordinates     the coordinates, where the token should be placed
+     * @param token           the token planned to be placed on the game board
+     * @throws PlaceException when there already is a token on these coordinates
+     */
+    public void place(Vector2D coordinates, Hexagon token) {
+        int xPos = coordinates.getxPos();
+        int yPos = coordinates.getyPos();
+        if (gameBoard[yPos][xPos] != Hexagon.PLACEABLE) {
+            throw new PlaceException(xPos, yPos);
+        } else {
+            gameBoard[yPos][xPos] = token;
+        }
+    }
+
+    /**
+     * Checks if the player with the given token is a winner.
+     * @param token the token of the player, that is checked
+     * @return      A boolean if the player is a winner
+     */
+    public boolean isWinner(Hexagon token) {
+        if (token == Hexagon.RED) {
+            return checkRedWinner();
+        } else if (token == Hexagon.BLUE) {
+            return checkBlueWinner();
+        }
+        return false;
+    }
+    private boolean checkRedWinner() {
+        for (int column = 0; column < size; column++) {
+            if (gameBoard[0][column] != Hexagon.RED) {
+                continue;
+            }
+            List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, 0), Hexagon.RED);
+            for (Vector2D traversedNodes : traversal) {
+                if (traversedNodes.getyPos() == this.size - 1) {
+                    winnersPath(traversal);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private boolean checkBlueWinner() {
+        for (int row = 0; row < size; row++) {
+            if (gameBoard[row][0] != Hexagon.BLUE) {
+                continue;
+            }
+            List<Vector2D> traversal = depthFirstSearch(new Vector2D(0, row), Hexagon.BLUE);
+            for (Vector2D traversedNodes : traversal) {
+                if (traversedNodes.getxPos() == this.size - 1) {
+                    winnersPath(traversal);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private List<Vector2D> depthFirstSearch(final Vector2D coordinates, final Hexagon token) {
+        Deque<Vector2D> stack = new ArrayDeque<>();
+        stack.push(coordinates);
+        boolean[][] validityBoard = deepCopy();
+        List<Vector2D> graph = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            Vector2D current = stack.pop();
+            int row = current.getyPos();
+            int column = current.getxPos();
+            if (!isValid(validityBoard, row, column)) {
+                continue;
+            }
+            validityBoard[row][column] = true;
+            graph.add(current);
+            for (Vector2D neighbour : getSameNeighbours(current, token)) {
+                stack.push(neighbour);
+            }
+        }
+        return graph;
+    }
+
+    private boolean[][] deepCopy() {
+        final boolean[][] result = new boolean[this.size][];
+        for (int row = 0; row < this.size; row++) {
+            result[row] = Arrays.copyOf(depthFirstSearchArray[row], this.size);
+        }
+        return result;
+    }
+
+    private List<Vector2D> getSameNeighbours(final Vector2D coordinates, Hexagon token) {
+        List<Vector2D> neighbours = new ArrayList<>();
+        for (Vector2D neighbour : getNeighbours(coordinates)) {
+            if (gameBoard[neighbour.getyPos()][neighbour.getxPos()] == token) {
+                neighbours.add(neighbour);
+            }
+        }
+        return neighbours;
+    }
+
+    private boolean isValid(boolean[][] validityBoard, int row, int column) {
+        return !validityBoard[row][column];
+    }
+    private void winnersPath(List<Vector2D> traversal) {
+        for (Vector2D node : traversal) {
+            gameBoard[node.getyPos()][node.getxPos()] = Hexagon.WINNER;
+        }
+    }
+}
