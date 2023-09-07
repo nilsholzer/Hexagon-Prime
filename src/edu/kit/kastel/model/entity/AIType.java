@@ -8,7 +8,7 @@ import edu.kit.kastel.ui.ResultType;
 /**
  * An enumeration of the different AI players.
  * @author uhquw
- * @version 1.0.2
+ * @version 1.0.3
  */
 public enum AIType {
     /**
@@ -39,8 +39,8 @@ public enum AIType {
                 newYCoor = nextFreeHexagon.getyPos();
                 gameBoard.place(nextFreeHexagon, aiToken);
             }
-            result.append(AI_PLACE_FORMAT.formatted(getName(), newXCoor, newYCoor) + aiGame.update());
-            return result.append(aiGame.update()).toString();
+            result.append(AI_PLACE_FORMAT.formatted(getName(), newXCoor, newYCoor)).append(aiGame.update());
+            return result.toString();
         }
     },
     /**
