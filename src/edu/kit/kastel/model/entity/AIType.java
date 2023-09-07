@@ -8,7 +8,7 @@ import edu.kit.kastel.ui.ResultType;
 /**
  * An enumeration of the different AI players.
  * @author uhquw
- * @version 1.0.3
+ * @version 1.0.4
  */
 public enum AIType {
     /**
@@ -52,8 +52,10 @@ public enum AIType {
             return null;
         }
     };
-
-    private static final String AI_PLACE_FORMAT = "%s places at %d %d" + ResultType.NEW_LINE_SYMBOL;
+    /**
+     * Format of the confirmation that an AI placed a hexagon on the game board.
+     */
+    public static final String AI_PLACE_FORMAT = "%s places at %d %d" + ResultType.NEW_LINE_SYMBOL;
     private final String name;
     AIType(final String name) {
         this.name = name;
@@ -63,7 +65,7 @@ public enum AIType {
      * Gets the name of the AIType.
      * @return the name of the AIType
      */
-    protected String getName() {
+    public String getName() {
         return name;
     }
 
