@@ -10,7 +10,7 @@ import edu.kit.kastel.ui.ResultType;
 /**
  * This class describes one game of Hex played against an AI.
  * @author uhquw
- * @version 1.0.3
+ * @version 1.0.4
  */
 public class AIGame extends Game {
     private final AIType aiType;
@@ -36,7 +36,7 @@ public class AIGame extends Game {
         Hexagon playersToken = currentPlayer.getToken();
         GameBoard gameBoard = getGameBoard();
         String result = placeHexagon(coordinates, currentPlayer, gameBoard);
-        if (!isActive()) {
+        if (isActive()) {
             result += ResultType.NEW_LINE_SYMBOL + aiPlace(playersToken, gameBoard);
         }
         return result;
