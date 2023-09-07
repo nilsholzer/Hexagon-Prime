@@ -1,8 +1,7 @@
 package edu.kit.kastel.model.logic;
 
-import edu.kit.kastel.model.entity.AIPlayer;
 import edu.kit.kastel.model.entity.Hexagon;
-import edu.kit.kastel.model.entity.Person;
+import edu.kit.kastel.model.entity.Player;
 import edu.kit.kastel.model.entity.Vector2D;
 import edu.kit.kastel.model.exceptions.NewGameException;
 import edu.kit.kastel.model.exceptions.SwitchGamesException;
@@ -66,9 +65,9 @@ public class Hex implements HexCommands {
     }
     private Game createGame(final String name) {
         if (isAIGame) {
-            return new AIGame(name, size, createPlayer1(), new AIPlayer(player2, Hexagon.BLUE), autoPrint);
+            return new AIGame(name, size, createPlayer1(), createPlayer2(), autoPrint);
         } else {
-            return new PersonGame(name, size, createPlayer1(), new Person(player2, Hexagon.BLUE), autoPrint);
+            return new PersonGame(name, size, createPlayer1(), createPlayer2(), autoPrint);
         }
     }
 
@@ -158,7 +157,10 @@ public class Hex implements HexCommands {
     private String autoPrintWelcome(final String gameName) {
         return gameName + System.lineSeparator() +  currentGame.update();
     }
-    private Person createPlayer1() {
-        return new Person(player1, Hexagon.RED);
+    private Player createPlayer1() {
+        return new Player(player1, Hexagon.RED);
+    }
+    private Player createPlayer2() {
+        return new Player(player2, Hexagon.BLUE);
     }
 }

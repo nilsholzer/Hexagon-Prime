@@ -24,9 +24,11 @@ public enum ResultType {
             System.out.printf(formattedMessage + NEW_LINE_SYMBOL, args);
         }
     };
-
-    private static final String ERROR = "Error: ";
+    /**
+     * New line symbol.
+     */
     public static final String NEW_LINE_SYMBOL = "%n";
+    private static final String ERROR = "Error: ";
 
     /**
      * Prints the result of the execution.
