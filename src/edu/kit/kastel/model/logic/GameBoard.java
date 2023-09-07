@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A game board of a game of hex.
  * @author uhquw
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class GameBoard {
     private static final String WHITESPACE = " ";
@@ -37,6 +37,11 @@ public class GameBoard {
             }
         }
     }
+
+    /**
+     * Gets the size of the game board.
+     * @return the size of the game board
+     */
     public int getSize() {
         return this.size;
     }
@@ -237,17 +242,13 @@ public class GameBoard {
         if (token == Hexagon.BLUE) {
             gameBoard[row][column] = token;
             List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, row), token);
-            if (listIsWinnersPath(traversal, true)) {
-                gameBoard[row][column] = Hexagon.PLACEABLE;
-                return true;
-            }
+            gameBoard[row][column] = Hexagon.PLACEABLE;
+            return listIsWinnersPath(traversal, true);
         } else if (token == Hexagon.RED) {
             gameBoard[row][column] = token;
             List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, row), token);
-            if (listIsWinnersPath(traversal, false)) {
-                gameBoard[row][column] = Hexagon.PLACEABLE;
-                return true;
-            }
+            gameBoard[row][column] = Hexagon.PLACEABLE;
+            return listIsWinnersPath(traversal, false);
         }
         return false;
     }
