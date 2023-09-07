@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A game board of a game of hex.
  * @author uhquw
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class GameBoard {
     private static final String WHITESPACE = " ";
@@ -124,8 +124,8 @@ public class GameBoard {
      * @return the coordinates of this hexagon
      */
     public Vector2D getNextFreeHexagon() {
-        for (int column = 0; column < this.size; column++) {
-            for (int row = 0; row < this.size; row++) {
+        for (int row = 0; row < this.size; row++) {
+            for (int column = 0; column < this.size; column++) {
                 if (gameBoard[row][column] == Hexagon.PLACEABLE) {
                     return new Vector2D(column, row);
                 }
