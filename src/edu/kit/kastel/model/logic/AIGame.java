@@ -41,6 +41,14 @@ public class AIGame extends Game {
         }
         return result;
     }
+
+    /**
+     * Places a token for the AI, depending if the AI can win on next move or the player can win on next move.
+     * If neither can, it will place a stone or swap players depending on the AI´s implementation
+     * @param playersToken the token of the real player
+     * @param gameBoard    the game board, where the AI places its stone
+     * @return A confirmation of the successful placement of the stone, or the successful swap
+     */
     private String aiPlace(Hexagon playersToken, GameBoard gameBoard) {
         String aiName = aiType.getName();
         Player aiPlayer = getCurrentPlayer();
@@ -67,6 +75,14 @@ public class AIGame extends Game {
             return aiType.turn(this);
         }
     }
+
+    /**
+     * Places a stone on the given coordinates on the gameboard, for the given player and updates the game after.
+     * @param coordinates   the coordinates of the placed token
+     * @param currentPlayer the player, who places the token
+     * @param gameBoard     the game board, where the token is placed on
+     * @return An update, that it´s the next players turn or a winnning confirmation
+     */
     private String placeHexagon(Vector2D coordinates, Player currentPlayer, GameBoard gameBoard) {
         gameBoard.place(coordinates, currentPlayer.getToken());
         addTurn(coordinates, currentPlayer);

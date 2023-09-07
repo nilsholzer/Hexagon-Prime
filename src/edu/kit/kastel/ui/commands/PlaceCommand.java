@@ -16,6 +16,10 @@ import java.util.regex.Matcher;
  * @version 1.0.0
  */
 public class PlaceCommand extends HexCommand {
+    /**
+     * Error message that occurs, when the given coordinate is out of bounds.
+     */
+    public static final String COORDINATE_INVALID_FORMAT = "the coordinate (%d, %d) is not valid.";
     protected static final String COMMAND_NAME = "place";
     protected static final String COMMAND_DESCRIPTION = "Places a new token on the game board";
     private static final String INVALID_ARGUMENTS = "The given arguments do not contain two numbers";
@@ -39,6 +43,9 @@ public class PlaceCommand extends HexCommand {
         }
         int xPos = Integer.parseInt(commandArguments[0]);
         int yPos = Integer.parseInt(commandArguments[1]);
+        if (xPos < 0 || yPos < 0) {
+            return new Result(ResultType.FAILURE, COORDINATE_INVALID_FORMAT.formatted(xPos, yPos));
+        }
         Vector2D coordinates = new Vector2D(xPos, yPos);
         try {
             return new Result(ResultType.SUCCESS, hex.place(coordinates));

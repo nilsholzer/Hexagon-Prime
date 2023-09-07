@@ -20,7 +20,7 @@ public enum AIType {
             Vector2D playersLastMove = aiGame.getLastMove();
             int xPos = playersLastMove.getxPos();
             int yPos = playersLastMove.getyPos();
-            if (aiGame.getAllTurns() == 1 && (xPos + yPos) % 2 == 0) {
+            if (aiGame.getTurnsSize() == 1 && (xPos + yPos) % 2 == 0) {
                 return aiGame.swap();
             }
             GameBoard gameBoard = aiGame.getGameBoard();

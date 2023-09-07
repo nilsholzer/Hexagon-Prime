@@ -6,6 +6,7 @@ import edu.kit.kastel.model.entity.Vector2D;
 import edu.kit.kastel.model.exceptions.NewGameException;
 import edu.kit.kastel.model.exceptions.SwitchGamesException;
 import edu.kit.kastel.ui.ResultType;
+import edu.kit.kastel.ui.commands.PlaceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ public class Hex implements HexCommands {
     private static final String LIST_GAMES_OUTPUT = "%s: %d";
     private static final String WELCOME_OUTPUT = "Welcome to %s";
     private static final String FIRST_NAME = "Prime";
-    private static final String COORDINATE_INVALID_FORMAT = "the coordinate (%d, %d) is not valid.";
     private static final String SWITCHED_GAME = "Switched game to %s";
     private static final String AUTO_PRINT = "auto-print";
     private final int size;
@@ -63,11 +63,17 @@ public class Hex implements HexCommands {
 
         ResultType.SUCCESS.printResult(WELCOME_OUTPUT, autoPrintWelcome(FIRST_NAME));
     }
+
+    /**
+     * Creates a game with the given name.
+     * @param name the name of the game
+     * @return A new AIGame, if the Hex game is played against an AI or else a PlayersGame
+     */
     private Game createGame(final String name) {
         if (isAIGame) {
             return new AIGame(name, size, createPlayer1(), createPlayer2(), autoPrint);
         } else {
-            return new PersonGame(name, size, createPlayer1(), createPlayer2(), autoPrint);
+            return new PlayersGame(name, size, createPlayer1(), createPlayer2(), autoPrint);
         }
     }
 
@@ -80,8 +86,9 @@ public class Hex implements HexCommands {
     public String place(final Vector2D coordinates) {
         int xPos = coordinates.getxPos();
         int yPos = coordinates.getyPos();
+        //Throws IllegalArgumentException, if the given coordinates are out of bounds.
         if (xPos >= size || yPos >= size) {
-            throw new IllegalArgumentException(COORDINATE_INVALID_FORMAT.formatted(xPos, yPos));
+            throw new IllegalArgumentException(PlaceCommand.COORDINATE_INVALID_FORMAT.formatted(xPos, yPos));
         }
         return currentGame.place(coordinates);
     }
@@ -106,7 +113,7 @@ public class Hex implements HexCommands {
             if (!game.isActive()) {
                 continue;
             }
-            result.append(LIST_GAMES_OUTPUT.formatted(game.getName(), game.getAllTurns()));
+            result.append(LIST_GAMES_OUTPUT.formatted(game.getName(), game.getTurnsSize()));
             if (gamesIterator.hasNext()) {
                 result.append(ResultType.NEW_LINE_SYMBOL);
             }
@@ -138,9 +145,8 @@ public class Hex implements HexCommands {
      * @throws SwitchGamesException when a game with this name does not exist
      */
     public String switchGame(final String switchedGameName) {
-        String nameOfGameBefore = currentGame.getName();
-        if (nameOfGameBefore.equals(switchedGameName)) {
-            return SWITCHED_GAME.formatted(switchedGameName);
+        if (games.stream().noneMatch(game -> game.getName().equals(switchedGameName))) {
+            throw new SwitchGamesException();
         }
         for (Game switchedGame : games) {
             if (switchedGameName.equals(switchedGame.getName())) {
@@ -148,18 +154,17 @@ public class Hex implements HexCommands {
                 break;
             }
         }
-        if (nameOfGameBefore.equals(currentGame.getName())) {
-            throw new SwitchGamesException();
-        }
         return SWITCHED_GAME.formatted(switchedGameName);
     }
-
+    //Prints a welcome message, if a new game is started.
     private String autoPrintWelcome(final String gameName) {
         return gameName + System.lineSeparator() +  currentGame.update();
     }
+    //creates Player 1
     private Player createPlayer1() {
         return new Player(player1, Hexagon.RED);
     }
+    //creates Player 2
     private Player createPlayer2() {
         return new Player(player2, Hexagon.BLUE);
     }

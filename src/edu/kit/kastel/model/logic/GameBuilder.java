@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  */
 public class GameBuilder {
+    //Regex for a number.
     private static final String NUMBER_REGEX = "\\d+";
     private static final String AI_REGEX = "^(BogoAI|HeroAI)$";
     private static final int MINIMUM_ARGUMENTS = 3;
@@ -21,7 +22,9 @@ public class GameBuilder {
     private static final String NOT_A_NUMBER_ERROR = "First argument is not a number";
     private static final String INVALID_SIZE_ERROR = "Invalid size of the gameboard";
     private static final String UNIQUE_NAMES_ERROR = "Players need to have unique names";
+    //Pattern for the Number regex.
     private static final Pattern NUMBER_PATTERN = Pattern.compile(NUMBER_REGEX);
+    //Pattern for the Ai regex.
     private static final Pattern AI_PATTERN = Pattern.compile(AI_REGEX);
 
     /**
@@ -45,10 +48,13 @@ public class GameBuilder {
         if (arguments[1].equals(arguments[2])) {
             throw new BuildException(UNIQUE_NAMES_ERROR);
         }
+        //Checks if the second players name matches an AIType, so the game knows if player 1 plays against an AI.
         matcher = AI_PATTERN.matcher(arguments[2]);
         if (arguments.length == MAXIMUM_ARGUMENTS) {
+            //Returns a new Hex game, possibly with the autoprint feature, if the String is correct.
             return new Hex(size, arguments[1], arguments[2], arguments[MINIMUM_ARGUMENTS], matcher.matches());
         } else {
+            //Returns a new Hex game without the autoprint feature.
             return new Hex(size, arguments[1], arguments[2], matcher.matches());
         }
     }

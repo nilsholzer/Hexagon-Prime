@@ -5,3 +5,4 @@ public class BuildException extends IllegalArgumentException {
         super(message);
     }
 }
+

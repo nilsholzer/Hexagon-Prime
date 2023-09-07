@@ -9,7 +9,7 @@ import edu.kit.kastel.model.exceptions.PlaceException;
  * @author uhquw
  * @version 1.0.1
  */
-public class PersonGame extends Game {
+public class PlayersGame extends Game {
     /**
      * Constructs a new game of Hex played by two players.
      * @param name      the name of the game
@@ -18,7 +18,7 @@ public class PersonGame extends Game {
      * @param player2   the second player, who is also a real person
      * @param autoPrint describes, if autoprint is enabled for the game
      */
-    public PersonGame(final String name, final int gameboardSize, final Player player1, final Player player2, final boolean autoPrint) {
+    public PlayersGame(final String name, final int gameboardSize, final Player player1, final Player player2, final boolean autoPrint) {
         super(name, gameboardSize, player1, player2, autoPrint);
     }
 

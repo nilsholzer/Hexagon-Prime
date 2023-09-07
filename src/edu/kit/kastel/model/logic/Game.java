@@ -30,8 +30,7 @@ public abstract class Game implements Executable, HexCommands {
     private final Player player2;
     private ExecutionState executionState;
     private final boolean autoPrint;
-    private boolean swapped;
-    // A list containing every turn of the game, including its coordinates and the player who placed the token
+    // A list containing every turn of the game, consisting the player and the coordinates of the turn.
     private final List<Entry<Vector2D, Player>> turns;
 
     /**
@@ -48,7 +47,6 @@ public abstract class Game implements Executable, HexCommands {
         gameBoard = new GameBoard(gameboardSize);
         this.player1 = player1;
         this.player2 = player2;
-        this.swapped = false;
         this.turns = new ArrayList<>();
         executionState = ExecutionState.RUNNING;
     }
@@ -69,6 +67,7 @@ public abstract class Game implements Executable, HexCommands {
             throw new HistoryException(turns, getTurnsSize());
         }
         StringBuilder result = new StringBuilder();
+        // A list containing only the last 'turns' turns.
         List<Entry<Vector2D, Player>> outputList = this.turns.subList(getTurnsSize() - turns, getTurnsSize());
         ListIterator<Entry<Vector2D, Player>> listIterator = outputList.listIterator(outputList.size());
         while (listIterator.hasPrevious()) {
@@ -94,7 +93,6 @@ public abstract class Game implements Executable, HexCommands {
         if (getTurnsSize() !=  1) {
             throw new SwapException();
         }
-        swapped = true;
         player1.swap();
         player2.swap();
         Vector2D firstCoordinates = turns.get(0).getKey();
@@ -103,22 +101,19 @@ public abstract class Game implements Executable, HexCommands {
     }
 
     /**
+     * Gets the size of the turns array.
+     * @return the size of the turns array.
+     */
+    public int getTurnsSize() {
+        return turns.size();
+    }
+
+    /**
      * Gets the name of the game.
      * @return the name of the game
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Returns all the turns including the swap, if it happened.
-     * @return all the turns of a game
-     */
-    public int getAllTurns() {
-        if (swapped) {
-            return getTurnsSize() + 1;
-        }
-        return getTurnsSize();
     }
 
     /**
@@ -179,9 +174,6 @@ public abstract class Game implements Executable, HexCommands {
         turns.add(new SimpleEntry<>(coordinates, player));
     }
 
-    private int getTurnsSize() {
-        return turns.size();
-    }
     @Override
     public abstract String place(Vector2D coordinates);
 }

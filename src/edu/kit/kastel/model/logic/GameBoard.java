@@ -19,7 +19,9 @@ public class GameBoard {
     private static final String WHITESPACE = " ";
     private final int size;
     private final Hexagon[][] gameBoard;
+    // A 2D array needed to implement depth first search.
     private final boolean[][] depthFirstSearchArray;
+     //Counts the amount of places on the game board.
     private int placeCount;
     /**
      * Constructs a new game board of a game of hex.
@@ -45,6 +47,7 @@ public class GameBoard {
     public int getSize() {
         return this.size;
     }
+
     /**
      * Prints the game board and all its hexagons.
      * @return A visualization of the game board and its hexagons
@@ -84,6 +87,7 @@ public class GameBoard {
 
     /**
      * Checks if the player with the given token is a winner.
+     * If the placeCount is lower than double the size - 1, it is not possible that there is a winner.
      * @param token the token of the player, that is checked
      * @return      A boolean if the player is a winner
      */
@@ -122,6 +126,7 @@ public class GameBoard {
     /**
      * Gets the coordinates of the first vacancy along the rows of hexagons.
      * @return the coordinates of this hexagon
+     *         or{@code null} if there is no free hexagon on the gameboard, but in that case there is already a winner.
      */
     public Vector2D getNextFreeHexagon() {
         for (int row = 0; row < this.size; row++) {
@@ -134,6 +139,11 @@ public class GameBoard {
         return null;
     }
 
+    /**
+     * Gets all the direct neighbours of a coordinate on the game board.
+     * @param coordinates the coordinate, which neighbours should be found
+     * @return A List of the coordinates of the neighbours
+     */
     private List<Vector2D> getNeighbours(final Vector2D coordinates) {
         int xPos = coordinates.getxPos();
         int yPos = coordinates.getyPos();
@@ -159,6 +169,11 @@ public class GameBoard {
         return neighbours;
     }
 
+    /**
+     * Checks for the player with the red token, if he has won.
+     * If he has a token on the top and on the bottom and they are connected via a path, he has won.
+     * @return A boolean telling if he has won
+     */
     private boolean checkRedWinner() {
         for (int column = 0; column < size; column++) {
             if (gameBoard[0][column] != Hexagon.RED) {
@@ -172,6 +187,11 @@ public class GameBoard {
         }
         return false;
     }
+    /**
+     * Checks for the player with the blue token, if he has won.
+     * If he has a token on the far left and on the far right and they are connected via a path, he has won.
+     * @return A boolean telling if he has won
+     */
     private boolean checkBlueWinner() {
         for (int row = 0; row < size; row++) {
             if (gameBoard[row][0] != Hexagon.BLUE) {
@@ -186,9 +206,17 @@ public class GameBoard {
         return false;
     }
 
+    /**
+     * Performs a depth first search on the game board.
+     * @param coordinates the root of the DFS
+     * @param token       the token, which is being searched for
+     * @return A List containing all the nodes, ,which are in the DFS-tree
+     */
     private List<Vector2D> depthFirstSearch(final Vector2D coordinates, final Hexagon token) {
         Deque<Vector2D> stack = new ArrayDeque<>();
+        //The stack, where every node, on which the DFS is applied to, is put in.
         stack.push(coordinates);
+        //A board representing all the visited nodes in the DFS.
         boolean[][] validityBoard = deepCopy();
         List<Vector2D> graph = new ArrayList<>();
         while (!stack.isEmpty()) {
@@ -198,8 +226,10 @@ public class GameBoard {
             if (!isValid(validityBoard, row, column)) {
                 continue;
             }
+            //Sets the current coordination as visited.
             validityBoard[row][column] = true;
             graph.add(current);
+            //It only adds neighbours to the stack, which have the same token as the root.
             for (Vector2D neighbour : getSameNeighbours(current, token)) {
                 stack.push(neighbour);
             }
@@ -207,6 +237,10 @@ public class GameBoard {
         return graph;
     }
 
+    /**
+     * Creates and returns a deep copy of the DFS array, so for every DFS there is a new "unvisited" array.
+     * @return A deep copy of the DFS array
+     */
     private boolean[][] deepCopy() {
         final boolean[][] result = new boolean[this.size][];
         for (int row = 0; row < this.size; row++) {
@@ -215,6 +249,12 @@ public class GameBoard {
         return result;
     }
 
+    /**
+     * Gets from all the neighbours of a hexagon, only the ones with the same token on their coordinates.
+     * @param coordinates the coordinates of the hexagon, whose neighbours are searched for
+     * @param token       the token, the neighbours need to be returned
+     * @return A list of all the neighbours with the same token
+     */
     private List<Vector2D> getSameNeighbours(final Vector2D coordinates, Hexagon token) {
         List<Vector2D> neighbours = new ArrayList<>();
         for (Vector2D neighbour : getNeighbours(coordinates)) {
@@ -225,38 +265,63 @@ public class GameBoard {
         return neighbours;
     }
 
+    /**
+     * Checks if the given hexagon is already visited in the DFS.
+     * @param validityBoard the board containing the information, if it is visited or not
+     * @param row           the row of the hexagon
+     * @param column        the column of the hexagon
+     * @return A boolean representing if the hexagon is already visited or not
+     */
     private boolean isValid(boolean[][] validityBoard, int row, int column) {
         return !validityBoard[row][column];
     }
+
+    /**
+     * Creates the path on the gameboard, that was used that the player could win.
+     * @param traversal A list containing all the nodes that were visited on the path
+     */
     private void winnersPath(List<Vector2D> traversal) {
         for (Vector2D node : traversal) {
             gameBoard[node.getyPos()][node.getxPos()] = Hexagon.WINNER;
         }
     }
+
+    /**
+     * Checks if there is a winner, when a token is placed on the node with the given coordinates.
+     * @param row    the row of the node
+     * @param column the column of the node
+     * @param token  the token that is being placed on the node
+     * @return A Boolean representing, if there is a winner, if the token was placed.
+     */
     private boolean isWinnersToken(final int row, final int column, final Hexagon token) {
         List<Vector2D> sameNeighbours = getSameNeighbours(new Vector2D(column, row), token);
         int neighbours = sameNeighbours.size();
+        //If the hexagon has less than one neighbour, there cannot be a winning path.
         if (neighbours < 1) {
             return false;
         }
-        if (token == Hexagon.BLUE) {
-            gameBoard[row][column] = token;
-            List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, row), token);
-            gameBoard[row][column] = Hexagon.PLACEABLE;
-            return listIsWinnersPath(traversal, true);
-        } else if (token == Hexagon.RED) {
-            gameBoard[row][column] = token;
-            List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, row), token);
-            gameBoard[row][column] = Hexagon.PLACEABLE;
-            return listIsWinnersPath(traversal, false);
-        }
-        return false;
+        //Places the given token on the node with the given coordinates.
+        gameBoard[row][column] = token;
+        //Performs a DFS
+        List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, row), token);
+        //Removes the node
+        gameBoard[row][column] = Hexagon.PLACEABLE;
+        return listIsWinnersPath(traversal, token == Hexagon.BLUE);
     }
-    private boolean listIsWinnersPath(final List<Vector2D> list, final boolean searchXPos) {
-        if (searchXPos) {
+
+    /**
+     * Checks if the given list is a winners path or not.
+     * @param list       the list containing a path
+     * @param playerBlue a boolean telling if the path should be tested as a winning path for player blue or red
+     * @return A boolean
+     */
+    private boolean listIsWinnersPath(final List<Vector2D> list, final boolean playerBlue) {
+        if (playerBlue) {
+            //Lambda expression checking the list, if it contains coordinates with the most eastern and western coordinate.
             return list.stream().anyMatch(vector2D -> vector2D.getxPos() == 0)
                     && list.stream().anyMatch(vector2D -> vector2D.getxPos() == this.size - 1);
         }
+        //Lambda expression checking the list, if it contains coordinates with the most northern and southern coordinate.
         return list.stream().anyMatch(vector2D -> vector2D.getyPos() == 0)
                 && list.stream().anyMatch(vector2D -> vector2D.getyPos() == this.size - 1);
     }
