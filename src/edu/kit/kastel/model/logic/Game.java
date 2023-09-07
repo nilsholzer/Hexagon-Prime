@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * This class describes one Game of Hex.
  * @author uhquw
- * @version 1.0.0
+ * @version 1.0.1
  */
 public abstract class Game implements Executable, HexCommands {
     private static final String HISTORY_OUTPUT = "%s: %d %d";
@@ -175,7 +175,7 @@ public abstract class Game implements Executable, HexCommands {
      * @param coordinates the coordinates of the turn
      * @param player      the player who placed the token
      */
-    protected void addTurn(final Vector2D coordinates, final Player player) {
+    public void addTurn(final Vector2D coordinates, final Player player) {
         turns.add(new SimpleEntry<>(coordinates, player));
     }
 

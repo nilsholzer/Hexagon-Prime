@@ -8,7 +8,7 @@ import edu.kit.kastel.ui.ResultType;
 /**
  * An enumeration of the different AI players.
  * @author uhquw
- * @version 1.0.4
+ * @version 1.0.5
  */
 public enum AIType {
     /**
@@ -24,7 +24,8 @@ public enum AIType {
                 return aiGame.swap();
             }
             GameBoard gameBoard = aiGame.getGameBoard();
-            Hexagon aiToken = aiGame.getCurrentPlayer().getToken();
+            Player aiPlayer = aiGame.getCurrentPlayer();
+            Hexagon aiToken = aiPlayer.getToken();
             StringBuilder result = new StringBuilder();
             int middle = (gameBoard.getSize() - 1) / 2;
             int distXMiddle = middle - xPos;
@@ -39,6 +40,7 @@ public enum AIType {
                 newYCoor = nextFreeHexagon.getyPos();
                 gameBoard.place(nextFreeHexagon, aiToken);
             }
+            aiGame.addTurn(new Vector2D(newXCoor, newYCoor), aiPlayer);
             result.append(AI_PLACE_FORMAT.formatted(getName(), newXCoor, newYCoor)).append(aiGame.update());
             return result.toString();
         }
