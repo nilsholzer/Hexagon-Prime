@@ -10,7 +10,7 @@ import edu.kit.kastel.ui.ResultType;
 /**
  * This class describes one game of Hex played against an AI.
  * @author uhquw
- * @version 1.0.2
+ * @version 1.0.3
  */
 public class AIGame extends Game {
     private final AIType aiType;
@@ -35,37 +35,41 @@ public class AIGame extends Game {
         Player currentPlayer = getCurrentPlayer();
         Hexagon playersToken = currentPlayer.getToken();
         GameBoard gameBoard = getGameBoard();
-        gameBoard.place(coordinates, playersToken);
-        addTurn(coordinates, currentPlayer);
-        String result = update();
-        //AIPlayer aiPlayer = (AIPlayer) getCurrentPlayer();
-        result += ResultType.NEW_LINE_SYMBOL + aiPlace(playersToken, gameBoard);
-        //result += ResultType.NEW_LINE_SYMBOL + update();
+        String result = placeHexagon(coordinates, currentPlayer, gameBoard);
+        if (!isActive()) {
+            result += ResultType.NEW_LINE_SYMBOL + aiPlace(playersToken, gameBoard);
+        }
         return result;
     }
     private String aiPlace(Hexagon playersToken, GameBoard gameBoard) {
         String aiName = aiType.getName();
-        Hexagon aiToken = getCurrentPlayer().getToken();
+        Player aiPlayer = getCurrentPlayer();
+        Hexagon aiToken = aiPlayer.getToken();
         Vector2D aiWinningvector = gameBoard.winInNextMove(aiToken);
         StringBuilder result = new StringBuilder();
         int xPos;
         int yPos;
         if (aiWinningvector != null) {
-            gameBoard.place(aiWinningvector, aiToken);
             xPos = aiWinningvector.getxPos();
             yPos = aiWinningvector.getyPos();
-            result.append(AIType.AI_PLACE_FORMAT.formatted(aiName, xPos, yPos)).append(update());
+            result.append(AIType.AI_PLACE_FORMAT.formatted(aiName, xPos, yPos))
+                    .append(placeHexagon(aiWinningvector, aiPlayer, gameBoard));
             return result.toString();
         }
         Vector2D playerWinningVector = gameBoard.winInNextMove(playersToken);
         if (playerWinningVector != null) {
             xPos = playerWinningVector.getxPos();
             yPos = playerWinningVector.getyPos();
-            gameBoard.place(playerWinningVector, aiToken);
-            result.append(AIType.AI_PLACE_FORMAT.formatted(aiName, xPos, yPos)).append(update());
+            result.append(AIType.AI_PLACE_FORMAT.formatted(aiName, xPos, yPos))
+                    .append(placeHexagon(playerWinningVector, aiPlayer, gameBoard));
             return result.toString();
         } else {
             return aiType.turn(this);
         }
+    }
+    private String placeHexagon(Vector2D coordinates, Player currentPlayer, GameBoard gameBoard) {
+        gameBoard.place(coordinates, currentPlayer.getToken());
+        addTurn(coordinates, currentPlayer);
+        return update();
     }
 }
