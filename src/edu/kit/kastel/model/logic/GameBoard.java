@@ -276,15 +276,13 @@ public class GameBoard {
     private boolean isWinnersToken(final int row, final int column, final Hexagon token) {
         List<Vector2D> sameNeighbours = getSameNeighbours(new Vector2D(column, row), token);
         int neighbours = sameNeighbours.size();
-        //If the hexagon has less than one neighbour, there cannot be a winning path.
+        //If the hexagon has less than one neighbour on the edge or less than 2 neighbours in the middle of the board
+        //There is no winning path including this hexagon.
         if (!isOnEdge(row, column) && neighbours < 2 || isOnEdge(row, column) && neighbours < 1) {
             return false;
         }
-        //Places the given token on the node with the given coordinates.
         gameBoard[row][column] = token;
-        //Performs a DFS
         List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, row), token);
-        //Removes the node
         gameBoard[row][column] = Hexagon.PLACEABLE;
         return listIsWinnersPath(traversal, token == Hexagon.BLUE);
     }
