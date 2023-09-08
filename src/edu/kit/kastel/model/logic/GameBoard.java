@@ -303,6 +303,7 @@ public class GameBoard {
         return list.stream().anyMatch(vector2D -> vector2D.getyPos() == 0)
                 && list.stream().anyMatch(vector2D -> vector2D.getyPos() == this.size - 1);
     }
+    //Checks if the heaxagon with the given coordinates is on the edge of the gameboard.
     private boolean isOnEdge(final int row, final int column) {
         return row == 0 || column == 0 || row == this.size - 1 || column == this.size - 1;
     }
