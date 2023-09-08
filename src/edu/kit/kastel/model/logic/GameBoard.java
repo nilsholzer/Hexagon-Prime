@@ -141,6 +141,17 @@ public class GameBoard {
         return null;
     }
 
+    public Vector2D getEasternHexagon() {
+        for (int column = 0; column < size; column++) {
+            for (int row = 0; row < size; row++) {
+                if (gameBoard[row][column] == Hexagon.PLACEABLE) {
+                    return new Vector2D(column, row);
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Finds the shortest path of free hexagons to the eastern border starting at the given coordinate.
      * @param coordinates the coordinates of the starting hexagon

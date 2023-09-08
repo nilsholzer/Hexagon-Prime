@@ -57,7 +57,7 @@ public enum AIType {
             Vector2D setVector;
             StringBuilder result = new StringBuilder();
             if (aiGame.getTurnsSize() == 1) {
-                setVector = gameBoard.getNextFreeHexagon();
+                setVector = gameBoard.getEasternHexagon();
                 gameBoard.place(setVector, aiPlayer.getToken());
             } else {
                 setVector = setVector(aiGame.getMove(2), gameBoard, 2, aiGame);
@@ -75,7 +75,7 @@ public enum AIType {
             if (turnCount + 2 < aiGame.getTurnsSize()) {
                 return setVector(aiGame.getMove(turnCount + 2), gameBoard, turnCount + 2, aiGame);
             } else {
-                return gameBoard.getNextFreeHexagon();
+                return gameBoard.getEasternHexagon();
             }
         }
     };
