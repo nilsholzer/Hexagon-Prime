@@ -6,6 +6,8 @@ import edu.kit.kastel.model.logic.Game;
 import edu.kit.kastel.model.logic.GameBoard;
 import edu.kit.kastel.ui.ResultType;
 
+import java.util.StringTokenizer;
+
 /**
  * An enumeration of the different AI players.
  * @author uhquw
@@ -54,13 +56,15 @@ public enum AIType {
         public String turn(AIGame aiGame) {
             GameBoard gameBoard = aiGame.getGameBoard();
             Player aiPlayer = aiGame.getCurrentPlayer();
+            Hexagon aiToken = aiPlayer.getToken();
             Vector2D setVector;
             StringBuilder result = new StringBuilder();
             if (aiGame.getTurnsSize() == 1) {
                 setVector = gameBoard.getEasternHexagon();
-                gameBoard.place(setVector, aiPlayer.getToken());
+                gameBoard.place(setVector, aiToken);
             } else {
                 setVector = setVector(aiGame.getMove(2), gameBoard, 2, aiGame);
+                gameBoard.place(setVector, aiToken);
             }
             aiGame.addTurn(setVector, aiPlayer);
             result.append(AI_PLACE_FORMAT.formatted(getName(), setVector.getxPos(), setVector.getyPos())).append(aiGame.update());
