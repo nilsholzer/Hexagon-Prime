@@ -32,6 +32,7 @@ public abstract class Game implements Executable, HexCommands {
     private final boolean autoPrint;
     // A list containing every turn of the game, consisting the player and the coordinates of the turn.
     private final List<Entry<Vector2D, Player>> turns;
+    private boolean swapped;
 
     /**
      * Constructs a new game of Hex.
@@ -49,6 +50,7 @@ public abstract class Game implements Executable, HexCommands {
         this.player2 = player2;
         this.turns = new ArrayList<>();
         executionState = ExecutionState.RUNNING;
+        swapped = false;
     }
 
     @Override
@@ -91,9 +93,10 @@ public abstract class Game implements Executable, HexCommands {
 
     @Override
     public String swap() {
-        if (getTurnsSize() !=  1) {
+        if (getTurnsSize() !=  1 && !swapped) {
             throw new SwapException();
         }
+        swapped = true;
         player1.swap();
         player2.swap();
         Vector2D firstCoordinates = turns.get(0).getKey();
