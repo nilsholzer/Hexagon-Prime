@@ -15,13 +15,13 @@ import java.util.ListIterator;
 /**
  * This class describes the Hex game.
  * @author uhquw
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class Hex implements HexCommands {
-    private static final String LIST_GAMES_OUTPUT = "%s: %d";
-    private static final String WELCOME_OUTPUT = "Welcome to %s";
+    private static final String LIST_GAMES_FORMAT = "%s: %d";
+    private static final String WELCOME_FORMAT = "Welcome to %s";
     private static final String FIRST_NAME = "Prime";
-    private static final String SWITCHED_GAME = "Switched game to %s";
+    private static final String SWITCHED_GAME_FORMAT = "Switched game to %s";
     private static final String AUTO_PRINT = "auto-print";
     private final int size;
     private final String player1;
@@ -61,7 +61,7 @@ public class Hex implements HexCommands {
         games.add(createGame(FIRST_NAME));
         currentGame = games.get(0);
 
-        ResultType.SUCCESS.printResult(WELCOME_OUTPUT, autoPrintWelcome(FIRST_NAME));
+        ResultType.SUCCESS.printResult(WELCOME_FORMAT, autoPrintWelcome(FIRST_NAME));
     }
 
     /**
@@ -113,7 +113,7 @@ public class Hex implements HexCommands {
             if (!game.isActive()) {
                 continue;
             }
-            result.append(LIST_GAMES_OUTPUT.formatted(game.getName(), game.getTurnsSize()));
+            result.append(LIST_GAMES_FORMAT.formatted(game.getName(), game.getTurnsSize()));
             if (gamesIterator.hasNext()) {
                 result.append(ResultType.NEW_LINE_SYMBOL);
             }
@@ -135,7 +135,7 @@ public class Hex implements HexCommands {
         }
         games.add(createGame(name));
         currentGame = games.get(games.size() - 1);
-        return WELCOME_OUTPUT.formatted(autoPrintWelcome(name));
+        return WELCOME_FORMAT.formatted(autoPrintWelcome(name));
     }
 
     /**
@@ -154,7 +154,7 @@ public class Hex implements HexCommands {
                 break;
             }
         }
-        return SWITCHED_GAME.formatted(switchedGameName);
+        return SWITCHED_GAME_FORMAT.formatted(switchedGameName);
     }
     //Prints a welcome message, if a new game is started.
     private String autoPrintWelcome(final String gameName) {

@@ -16,12 +16,12 @@ import java.util.Objects;
 /**
  * This class describes one Game of Hex.
  * @author uhquw
- * @version 1.0.1
+ * @version 1.0.2
  */
 public abstract class Game implements Executable, HexCommands {
-    private static final String HISTORY_OUTPUT = "%s: %d %d";
-    private static final String SWAP_OUTPUT = "%s swaps";
-    private static final String PLAYERS_TURN = "%s's turn";
+    private static final String HISTORY_FORMAT = "%s: %d %d";
+    private static final String SWAP_FORMAT = "%s swaps";
+    private static final String TURN_FORMAT = "%s's turn";
     private static final String WINNER_FORMAT = "%s wins!";
     private Player currentPlayer;
     private final GameBoard gameBoard;
@@ -70,12 +70,13 @@ public abstract class Game implements Executable, HexCommands {
         // A list containing only the last 'turns' turns.
         List<Entry<Vector2D, Player>> outputList = this.turns.subList(getTurnsSize() - turns, getTurnsSize());
         ListIterator<Entry<Vector2D, Player>> listIterator = outputList.listIterator(outputList.size());
+        //Iterates through the list from the back.
         while (listIterator.hasPrevious()) {
             Entry<Vector2D, Player> entry = listIterator.previous();
             String name = entry.getValue().getName();
             int xPos = entry.getKey().getxPos();
             int yPos = entry.getKey().getyPos();
-            result.append(HISTORY_OUTPUT.formatted(name, xPos, yPos));
+            result.append(HISTORY_FORMAT.formatted(name, xPos, yPos));
             if (listIterator.hasPrevious()) {
                 result.append(ResultType.NEW_LINE_SYMBOL);
             }
@@ -97,7 +98,7 @@ public abstract class Game implements Executable, HexCommands {
         player2.swap();
         Vector2D firstCoordinates = turns.get(0).getKey();
         turns.set(0, new SimpleEntry<>(firstCoordinates, player2));
-        return SWAP_OUTPUT.formatted(player2.getName()) + ResultType.NEW_LINE_SYMBOL + update();
+        return SWAP_FORMAT.formatted(player2.getName()) + ResultType.NEW_LINE_SYMBOL + update();
     }
 
     /**
@@ -145,7 +146,7 @@ public abstract class Game implements Executable, HexCommands {
         if (autoPrint) {
             result.append(print()).append(System.lineSeparator());
         }
-        result.append(PLAYERS_TURN.formatted(currentPlayer.getName()));
+        result.append(TURN_FORMAT.formatted(currentPlayer.getName()));
         return result.toString();
     }
 

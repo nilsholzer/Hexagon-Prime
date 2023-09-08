@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A game board of a game of hex.
  * @author uhquw
- * @version 1.0.2
+ * @version 1.0.3
  */
 public class GameBoard {
     private static final String WHITESPACE = " ";
@@ -139,11 +139,7 @@ public class GameBoard {
         return null;
     }
 
-    /**
-     * Gets all the direct neighbours of a coordinate on the game board.
-     * @param coordinates the coordinate, which neighbours should be found
-     * @return A List of the coordinates of the neighbours
-     */
+    //Gets all the neighbours from a hexagon with the given coordinates.
     private List<Vector2D> getNeighbours(final Vector2D coordinates) {
         int xPos = coordinates.getxPos();
         int yPos = coordinates.getyPos();
@@ -187,11 +183,7 @@ public class GameBoard {
         }
         return false;
     }
-    /**
-     * Checks for the player with the blue token, if he has won.
-     * If he has a token on the far left and on the far right and they are connected via a path, he has won.
-     * @return A boolean telling if he has won
-     */
+    //Same procedure as checkRedWinner, expect it checks for a connected path from left to right.
     private boolean checkBlueWinner() {
         for (int row = 0; row < size; row++) {
             if (gameBoard[row][0] != Hexagon.BLUE) {
@@ -226,7 +218,6 @@ public class GameBoard {
             if (!isValid(validityBoard, row, column)) {
                 continue;
             }
-            //Sets the current coordination as visited.
             validityBoard[row][column] = true;
             graph.add(current);
             //It only adds neighbours to the stack, which have the same token as the root.
@@ -249,12 +240,7 @@ public class GameBoard {
         return result;
     }
 
-    /**
-     * Gets from all the neighbours of a hexagon, only the ones with the same token on their coordinates.
-     * @param coordinates the coordinates of the hexagon, whose neighbours are searched for
-     * @param token       the token, the neighbours need to be returned
-     * @return A list of all the neighbours with the same token
-     */
+    //Gets all the neighbours from a hexagon with the same token as the hexagon.
     private List<Vector2D> getSameNeighbours(final Vector2D coordinates, Hexagon token) {
         List<Vector2D> neighbours = new ArrayList<>();
         for (Vector2D neighbour : getNeighbours(coordinates)) {
@@ -265,19 +251,13 @@ public class GameBoard {
         return neighbours;
     }
 
-    /**
-     * Checks if the given hexagon is already visited in the DFS.
-     * @param validityBoard the board containing the information, if it is visited or not
-     * @param row           the row of the hexagon
-     * @param column        the column of the hexagon
-     * @return A boolean representing if the hexagon is already visited or not
-     */
+    //Checks if the hexagon with the given coordinates is marked as visited in the DFS.
     private boolean isValid(boolean[][] validityBoard, int row, int column) {
         return !validityBoard[row][column];
     }
 
     /**
-     * Creates the path on the gameboard, that was used that the player could win.
+     * Creates the path on the gameboard, that was used so the player could win.
      * @param traversal A list containing all the nodes that were visited on the path
      */
     private void winnersPath(List<Vector2D> traversal) {
@@ -297,7 +277,7 @@ public class GameBoard {
         List<Vector2D> sameNeighbours = getSameNeighbours(new Vector2D(column, row), token);
         int neighbours = sameNeighbours.size();
         //If the hexagon has less than one neighbour, there cannot be a winning path.
-        if (neighbours < 1) {
+        if (!isOnEdge(row, column) && neighbours < 2 || isOnEdge(row, column) && neighbours < 1) {
             return false;
         }
         //Places the given token on the node with the given coordinates.
@@ -324,5 +304,8 @@ public class GameBoard {
         //Lambda expression checking the list, if it contains coordinates with the most northern and southern coordinate.
         return list.stream().anyMatch(vector2D -> vector2D.getyPos() == 0)
                 && list.stream().anyMatch(vector2D -> vector2D.getyPos() == this.size - 1);
+    }
+    private boolean isOnEdge(final int row, final int column) {
+        return row == 0 || column == 0 || row == this.size - 1 || column == this.size - 1;
     }
 }
