@@ -93,7 +93,7 @@ public abstract class Game implements Executable, HexCommands {
 
     @Override
     public String swap() {
-        if (getTurnsSize() !=  1 || !swapped) {
+        if (getTurnsSize() !=  1 || swapped) {
             throw new SwapException();
         }
         swapped = true;
