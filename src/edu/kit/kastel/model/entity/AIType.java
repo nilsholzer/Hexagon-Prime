@@ -61,11 +61,10 @@ public enum AIType {
             StringBuilder result = new StringBuilder();
             if (aiGame.getTurnsSize() == 1) {
                 setVector = gameBoard.getEasternHexagon();
-                gameBoard.place(setVector, aiToken);
             } else {
                 setVector = setVector(aiGame.getMove(2), gameBoard, 2, aiGame);
-                gameBoard.place(setVector, aiToken);
             }
+            gameBoard.place(setVector, aiToken);
             aiGame.addTurn(setVector, aiPlayer);
             result.append(AI_PLACE_FORMAT.formatted(getName(), setVector.getxPos(), setVector.getyPos())).append(aiGame.update());
             return result.toString();
