@@ -1,12 +1,12 @@
 package edu.kit.kastel.model.logic;
 
 import edu.kit.kastel.model.entity.Hexagon;
+import edu.kit.kastel.model.entity.OvergoingClass;
 import edu.kit.kastel.model.entity.Vector2D;
 import edu.kit.kastel.model.exceptions.PlaceException;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 
@@ -22,6 +22,7 @@ public class GameBoard {
     // A 2D array needed to implement depth first search.
     private final boolean[][] depthFirstSearchArray;
     private final int[][] breadthFirstSearchArray;
+    private final OvergoingClass overgoingClass;
     private int placeCount;
     /**
      * Constructs a new game board of a game of hex.
@@ -40,6 +41,7 @@ public class GameBoard {
                 breadthFirstSearchArray[row][column] = -1;
             }
         }
+        overgoingClass = new OvergoingClass(size);
     }
 
     /**
@@ -141,6 +143,10 @@ public class GameBoard {
         return null;
     }
 
+    /**
+     * Todo.
+     * @return Todo.
+     */
     public Vector2D getEasternHexagon() {
         for (int column = 0; column < size; column++) {
             for (int row = 0; row < size; row++) {
@@ -155,10 +161,10 @@ public class GameBoard {
     /**
      * Finds the shortest path of free hexagons to the eastern border starting at the given coordinate.
      * @param coordinates the coordinates of the starting hexagon
-     * @return jwrgoerg
+     * @return todo.
      */
     public Vector2D shortestPathToEast(Vector2D coordinates) {
-        int[][] bfsArray = deepCopyOfInt();
+        int[][] bfsArray = overgoingClass.deepCopyOfInt();
         List<Vector2D> shortestPath = breadthFirstSearchArray(bfsArray, coordinates);
         if (shortestPath.isEmpty()) {
             return null;
@@ -236,7 +242,7 @@ public class GameBoard {
         //The stack, where every node, on which the DFS is applied to, is put in.
         stack.push(coordinates);
         //A board representing all the visited nodes in the DFS.
-        boolean[][] validityBoard = deepCopyOfBoolean();
+        boolean[][] validityBoard = overgoingClass.deepCopyOfBoolean();
         List<Vector2D> graph = new ArrayList<>();
         while (!stack.isEmpty()) {
             Vector2D current = stack.pop();
@@ -253,26 +259,6 @@ public class GameBoard {
             }
         }
         return graph;
-    }
-
-    /**
-     * Creates and returns a deep copy of the DFS array, so for every DFS there is a new "unvisited" array.
-     * @return A deep copy of the DFS array
-     */
-    private boolean[][] deepCopyOfBoolean() {
-        final boolean[][] result = new boolean[size][];
-        for (int row = 0; row < size; row++) {
-            result[row] = Arrays.copyOf(depthFirstSearchArray[row], size);
-        }
-        return result;
-    }
-
-    private int[][] deepCopyOfInt() {
-        final int[][] result = new int[size][];
-        for (int row = 0; row < size; row++) {
-            result[row] = Arrays.copyOf(breadthFirstSearchArray[row], size);
-        }
-        return result;
     }
 
     //Gets all the neighbours from a hexagon with the same token as the hexagon.
@@ -374,7 +360,7 @@ public class GameBoard {
     }
     private Vector2D getCorrectVector(final List<Vector2D> list, int[][] bfsArray) {
         Vector2D correctVector = null;
-        boolean[][] validityBoard = deepCopyOfBoolean();
+        boolean[][] validityBoard = overgoingClass.deepCopyOfBoolean();
         boolean isUniquePath = list.size() == 1;
         List<Vector2D> uniquePath = new ArrayList<>();
         Deque<Vector2D> stack = new ArrayDeque<>();
@@ -388,7 +374,7 @@ public class GameBoard {
                     uniquePath.add(current);
                 }
                 if (bfsArray[row][column] == 1) {
-                    correctVector = moreWestVector(correctVector, current);
+                    correctVector = overgoingClass.moreWestVector(correctVector, current);
                     continue;
                 }
                 int childCount = 0;
@@ -407,30 +393,8 @@ public class GameBoard {
             }
         }
         if (isUniquePath) {
-            correctVector = westVector(uniquePath);
+            correctVector = overgoingClass.westVector(uniquePath);
         }
         return correctVector;
-    }
-
-    private Vector2D moreWestVector(Vector2D current, Vector2D comparable) {
-        if (current == null) {
-            return comparable;
-        }
-        if (current.getxPos() > comparable.getxPos()) {
-            return comparable;
-        } else if (current.getxPos() < comparable.getxPos()) {
-            return current;
-        } else if (current.getyPos() > comparable.getyPos()) {
-            return comparable;
-        } else {
-            return current;
-        }
-    }
-    private Vector2D westVector(List<Vector2D> list) {
-        Vector2D westVector = list.get(0);
-        for (Vector2D vector2D : list) {
-            westVector = moreWestVector(westVector, vector2D);
-        }
-        return westVector;
     }
 }

@@ -6,8 +6,6 @@ import edu.kit.kastel.model.logic.Game;
 import edu.kit.kastel.model.logic.GameBoard;
 import edu.kit.kastel.ui.ResultType;
 
-import java.util.StringTokenizer;
-
 /**
  * An enumeration of the different AI players.
  * @author uhquw
