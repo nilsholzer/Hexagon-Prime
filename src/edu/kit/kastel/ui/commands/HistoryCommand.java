@@ -39,6 +39,9 @@ public class HistoryCommand extends HexCommand {
                 return new Result(ResultType.FAILURE, ARGUMENT_NOT_A_NUMBER);
             }
             turns = Integer.parseInt(commandArguments[0]);
+            if (turns == 0) {
+                return new Result(ResultType.FAILURE, ARGUMENT_NOT_A_NUMBER);
+            }
         }
         try {
             return new Result(ResultType.SUCCESS, hex.history(turns));

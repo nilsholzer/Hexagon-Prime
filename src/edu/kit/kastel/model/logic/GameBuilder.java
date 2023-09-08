@@ -22,7 +22,8 @@ public class GameBuilder {
     private static final String NOT_A_NUMBER_ERROR = "First argument is not a number";
     private static final String INVALID_SIZE_ERROR = "Invalid size of the gameboard";
     private static final String UNIQUE_NAMES_ERROR = "Players need to have unique names";
-    //Pattern for the Number regex.
+    private static final String PLAYER1_ERROR = "Player 1 cannot be named after an AI"
+;    //Pattern for the Number regex.
     private static final Pattern NUMBER_PATTERN = Pattern.compile(NUMBER_REGEX);
     //Pattern for the Ai regex.
     private static final Pattern AI_PATTERN = Pattern.compile(AI_REGEX);
@@ -47,6 +48,10 @@ public class GameBuilder {
         }
         if (arguments[1].equals(arguments[2])) {
             throw new BuildException(UNIQUE_NAMES_ERROR);
+        }
+        matcher = AI_PATTERN.matcher(arguments[1]);
+        if (matcher.matches()) {
+            throw new BuildException(PLAYER1_ERROR);
         }
         //Checks if the second players name matches an AIType, so the game knows if player 1 plays against an AI.
         matcher = AI_PATTERN.matcher(arguments[2]);

@@ -21,7 +21,7 @@ public class Hex implements HexCommands {
     private static final String LIST_GAMES_FORMAT = "%s: %d";
     private static final String WELCOME_FORMAT = "Welcome to %s";
     private static final String FIRST_NAME = "Prime";
-    private static final String SWITCHED_GAME_FORMAT = "Switched game to %s";
+    private static final String SWITCHED_GAME_FORMAT = "Switched to %s";
     private static final String AUTO_PRINT = "auto-print";
     private final int size;
     private final String player1;
@@ -145,7 +145,8 @@ public class Hex implements HexCommands {
      * @throws SwitchGamesException when a game with this name does not exist
      */
     public String switchGame(final String switchedGameName) {
-        if (games.stream().noneMatch(game -> game.getName().equals(switchedGameName))) {
+        if (switchedGameName.equals(currentGame.getName())
+                || games.stream().noneMatch(game -> game.getName().equals(switchedGameName))) {
             throw new SwitchGamesException();
         }
         for (Game switchedGame : games) {
