@@ -21,7 +21,7 @@ public class GameBoard {
     private final Hexagon[][] gameBoard;
     // A 2D array needed to implement depth first search.
     private final boolean[][] depthFirstSearchArray;
-     //Counts the amount of places on the game board.
+    private final int[][] breadthFirstSearchArray;
     private int placeCount;
     /**
      * Constructs a new game board of a game of hex.
@@ -32,10 +32,12 @@ public class GameBoard {
         this.size = size;
         gameBoard = new Hexagon[this.size][this.size];
         depthFirstSearchArray = new boolean[this.size][this.size];
+        breadthFirstSearchArray = new int[this.size][this.size];
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 gameBoard[row][column] = Hexagon.PLACEABLE;
                 depthFirstSearchArray[row][column] = false;
+                breadthFirstSearchArray[row][column] = -1;
             }
         }
     }
@@ -92,7 +94,7 @@ public class GameBoard {
      * @return      A boolean if the player is a winner
      */
     public boolean isWinner(Hexagon token) {
-        if (this.placeCount < 2 * (this.size) - 1) {
+        if (this.placeCount < 2 * (size) - 1) {
             return false;
         }
         if (token == Hexagon.RED) {
@@ -110,11 +112,11 @@ public class GameBoard {
      *              Or {@code null} if there is no such coordinate
      */
     public Vector2D winInNextMove(Hexagon token) {
-        if (this.placeCount < (this.size * 2) - 2) {
+        if (this.placeCount < (size * 2) - 2) {
             return null;
         }
-        for (int column = 0; column < this.size; column++) {
-            for (int row = 0; row < this.size; row++) {
+        for (int column = 0; column < size; column++) {
+            for (int row = 0; row < size; row++) {
                 if (gameBoard[row][column] == Hexagon.PLACEABLE && isWinnersToken(row, column, token)) {
                     return new Vector2D(column, row);
                 }
@@ -129,14 +131,28 @@ public class GameBoard {
      *         or{@code null} if there is no free hexagon on the gameboard, but in that case there is already a winner.
      */
     public Vector2D getNextFreeHexagon() {
-        for (int row = 0; row < this.size; row++) {
-            for (int column = 0; column < this.size; column++) {
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
                 if (gameBoard[row][column] == Hexagon.PLACEABLE) {
                     return new Vector2D(column, row);
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * Finds the shortest path of free hexagons to the eastern border starting at the given coordinate.
+     * @param coordinates the coordinates of the starting hexagon
+     * @return jwrgoerg
+     */
+    public Vector2D shortestPathToEast(Vector2D coordinates) {
+        int[][] bfsArray = deepCopyOfInt();
+        List<Vector2D> shortestPath = breadthFirstSearchArray(bfsArray, coordinates);
+        if (shortestPath.isEmpty()) {
+            return null;
+        }
+        return getCorrectVector(shortestPath, bfsArray);
     }
 
     //Gets all the neighbours from a hexagon with the given coordinates.
@@ -209,7 +225,7 @@ public class GameBoard {
         //The stack, where every node, on which the DFS is applied to, is put in.
         stack.push(coordinates);
         //A board representing all the visited nodes in the DFS.
-        boolean[][] validityBoard = deepCopy();
+        boolean[][] validityBoard = deepCopyOfBoolean();
         List<Vector2D> graph = new ArrayList<>();
         while (!stack.isEmpty()) {
             Vector2D current = stack.pop();
@@ -232,10 +248,18 @@ public class GameBoard {
      * Creates and returns a deep copy of the DFS array, so for every DFS there is a new "unvisited" array.
      * @return A deep copy of the DFS array
      */
-    private boolean[][] deepCopy() {
-        final boolean[][] result = new boolean[this.size][];
-        for (int row = 0; row < this.size; row++) {
-            result[row] = Arrays.copyOf(depthFirstSearchArray[row], this.size);
+    private boolean[][] deepCopyOfBoolean() {
+        final boolean[][] result = new boolean[size][];
+        for (int row = 0; row < size; row++) {
+            result[row] = Arrays.copyOf(depthFirstSearchArray[row], size);
+        }
+        return result;
+    }
+
+    private int[][] deepCopyOfInt() {
+        final int[][] result = new int[size][];
+        for (int row = 0; row < size; row++) {
+            result[row] = Arrays.copyOf(breadthFirstSearchArray[row], size);
         }
         return result;
     }
@@ -298,14 +322,106 @@ public class GameBoard {
         if (playerBlue) {
             //Lambda expression checking the list, if it contains coordinates with the most eastern and western coordinate.
             return list.stream().anyMatch(vector2D -> vector2D.getxPos() == 0)
-                    && list.stream().anyMatch(vector2D -> vector2D.getxPos() == this.size - 1);
+                    && list.stream().anyMatch(vector2D -> vector2D.getxPos() == size - 1);
         }
         //Lambda expression checking the list, if it contains coordinates with the most northern and southern coordinate.
         return list.stream().anyMatch(vector2D -> vector2D.getyPos() == 0)
-                && list.stream().anyMatch(vector2D -> vector2D.getyPos() == this.size - 1);
+                && list.stream().anyMatch(vector2D -> vector2D.getyPos() == size - 1);
     }
     //Checks if the heaxagon with the given coordinates is on the edge of the gameboard.
     private boolean isOnEdge(final int row, final int column) {
-        return row == 0 || column == 0 || row == this.size - 1 || column == this.size - 1;
+        return row == 0 || column == 0 || row == size - 1 || column == size - 1;
+    }
+    private List<Vector2D> breadthFirstSearchArray(final int[][] bfsArray, final Vector2D coordinates) {
+        Deque<Vector2D> queue = new ArrayDeque<>();
+        queue.push(coordinates);
+        boolean[][] validityBoard = deepCopyOfBoolean();
+        bfsArray[coordinates.getyPos()][coordinates.getxPos()] = 0;
+        List<Vector2D> shortestPath = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            Vector2D current = queue.poll();
+            int row = current.getyPos();
+            int column = current.getxPos();
+            validityBoard[row][column] = true;
+            if (column == size - 1) {
+                if (shortestPath.isEmpty()) {
+                    shortestPath.add(current);
+                } else if (bfsArray[shortestPath.get(0).getyPos()][column] == bfsArray[row][column]) {
+                    shortestPath.add(current);
+                } else {
+                    break;
+                }
+            }
+            for (Vector2D neighbour : getSameNeighbours(current, Hexagon.PLACEABLE)) {
+                int neighbourRow = neighbour.getyPos();
+                int neighbourColumn = neighbour.getxPos();
+                if (isValid(validityBoard, neighbourRow, neighbourColumn)) {
+                    queue.push(neighbour);
+                    bfsArray[neighbourRow][neighbourColumn] = bfsArray[row][column] + 1;
+                }
+            }
+        }
+        return shortestPath;
+    }
+    private Vector2D getCorrectVector(final List<Vector2D> list, int[][] bfsArray) {
+        Vector2D correctVector = null;
+        boolean[][] validityBoard = deepCopyOfBoolean();
+        boolean isUniquePath = list.size() == 1;
+        List<Vector2D> uniquePath = new ArrayList<>();
+        Deque<Vector2D> stack = new ArrayDeque<>();
+        for (Vector2D edge : list) {
+            stack.push(edge);
+            while (!stack.isEmpty()) {
+                Vector2D current = stack.pop();
+                int row = current.getyPos();
+                int column  = current.getxPos();
+                if (isUniquePath) {
+                    uniquePath.add(current);
+                }
+                if (bfsArray[row][column] == 1) {
+                    correctVector = moreWestVector(correctVector, current);
+                    continue;
+                }
+                int childCount = 0;
+                for (Vector2D neighbour : getSameNeighbours(current, Hexagon.PLACEABLE)) {
+                    int nRow = neighbour.getyPos();
+                    int nColumn = neighbour.getxPos();
+                    if (bfsArray[nRow][nColumn] - 1 == bfsArray[row][column] && isValid(validityBoard, nRow, nColumn)) {
+                        stack.push(neighbour);
+                        childCount++;
+                        validityBoard[nRow][nColumn] = true;
+                    }
+                }
+                if (childCount > 1) {
+                   isUniquePath = false;
+                }
+            }
+        }
+        if (isUniquePath) {
+            correctVector = westVector(uniquePath);
+        }
+        return correctVector;
+    }
+
+    private Vector2D moreWestVector(Vector2D current, Vector2D comparable) {
+        if (current == null) {
+            return comparable;
+        }
+        if (current.getxPos() > comparable.getxPos()) {
+            return comparable;
+        } else if (current.getxPos() < comparable.getxPos()) {
+            return current;
+        } else if (current.getyPos() > comparable.getyPos()) {
+            return comparable;
+        } else {
+            return current;
+        }
+    }
+    private Vector2D westVector(List<Vector2D> list) {
+        Vector2D westVector = list.get(0);
+        for (Vector2D vector2D : list) {
+            westVector = moreWestVector(westVector, vector2D);
+        }
+        return westVector;
     }
 }

@@ -151,11 +151,12 @@ public abstract class Game implements Executable, HexCommands {
     }
 
     /**
-     * Gets the last move of a game.
+     * Gets the 'moveCounts' last move of a game.
+     * @param moveCount the move to be looked at
      * @return the last move of a game
      */
-    public Vector2D getLastMove() {
-        return turns.get(getTurnsSize() - 1).getKey();
+    public Vector2D getMove(final int moveCount) {
+        return turns.get(getTurnsSize() - moveCount).getKey();
     }
 
     /**

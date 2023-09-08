@@ -2,6 +2,7 @@ package edu.kit.kastel.model.entity;
 
 import edu.kit.kastel.model.exceptions.PlaceException;
 import edu.kit.kastel.model.logic.AIGame;
+import edu.kit.kastel.model.logic.Game;
 import edu.kit.kastel.model.logic.GameBoard;
 import edu.kit.kastel.ui.ResultType;
 
@@ -17,7 +18,7 @@ public enum AIType {
     BogoAI("BogoAI") {
         @Override
         public String turn(AIGame aiGame) {
-            Vector2D playersLastMove = aiGame.getLastMove();
+            Vector2D playersLastMove = aiGame.getMove(1);
             int xPos = playersLastMove.getxPos();
             int yPos = playersLastMove.getyPos();
             if (aiGame.getTurnsSize() == 1 && (xPos + yPos) % 2 == 0) {
@@ -51,7 +52,31 @@ public enum AIType {
     HeroAI("HeroAI") {
         @Override
         public String turn(AIGame aiGame) {
-            return null;
+            GameBoard gameBoard = aiGame.getGameBoard();
+            Player aiPlayer = aiGame.getCurrentPlayer();
+            Vector2D setVector;
+            StringBuilder result = new StringBuilder();
+            if (aiGame.getTurnsSize() == 1) {
+                setVector = gameBoard.getNextFreeHexagon();
+                gameBoard.place(setVector, aiPlayer.getToken());
+            } else {
+                setVector = setVector(aiGame.getMove(2), gameBoard, 2, aiGame);
+            }
+            aiGame.addTurn(setVector, aiPlayer);
+            result.append(AI_PLACE_FORMAT.formatted(getName(), setVector.getxPos(), setVector.getyPos())).append(aiGame.update());
+            return result.toString();
+        }
+
+        private Vector2D setVector(final Vector2D lastMove, GameBoard gameBoard, int turnCount, Game aiGame) {
+            Vector2D setVector = gameBoard.shortestPathToEast(lastMove);
+            if (setVector != null) {
+                return setVector;
+            }
+            if (turnCount + 2 < aiGame.getTurnsSize()) {
+                return setVector(aiGame.getMove(turnCount + 2), gameBoard, turnCount + 2, aiGame);
+            } else {
+                return gameBoard.getNextFreeHexagon();
+            }
         }
     };
     /**
