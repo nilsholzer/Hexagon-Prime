@@ -346,14 +346,12 @@ public class GameBoard {
     private List<Vector2D> breadthFirstSearchArray(final int[][] bfsArray, final Vector2D coordinates) {
         Deque<Vector2D> queue = new ArrayDeque<>();
         queue.push(coordinates);
-        boolean[][] validityBoard = deepCopyOfBoolean();
         bfsArray[coordinates.getyPos()][coordinates.getxPos()] = 0;
         List<Vector2D> shortestPath = new ArrayList<>();
         while (!queue.isEmpty()) {
             Vector2D current = queue.poll();
             int row = current.getyPos();
             int column = current.getxPos();
-            validityBoard[row][column] = true;
             if (column == size - 1) {
                 if (shortestPath.isEmpty()) {
                     shortestPath.add(current);
@@ -366,8 +364,8 @@ public class GameBoard {
             for (Vector2D neighbour : getSameNeighbours(current, Hexagon.PLACEABLE)) {
                 int neighbourRow = neighbour.getyPos();
                 int neighbourColumn = neighbour.getxPos();
-                if (isValid(validityBoard, neighbourRow, neighbourColumn)) {
-                    queue.push(neighbour);
+                if (bfsArray[neighbourRow][neighbourColumn] == -1) {
+                    queue.addLast(neighbour);
                     bfsArray[neighbourRow][neighbourColumn] = bfsArray[row][column] + 1;
                 }
             }
@@ -397,14 +395,14 @@ public class GameBoard {
                 for (Vector2D neighbour : getSameNeighbours(current, Hexagon.PLACEABLE)) {
                     int nRow = neighbour.getyPos();
                     int nColumn = neighbour.getxPos();
-                    if (bfsArray[nRow][nColumn] - 1 == bfsArray[row][column] && isValid(validityBoard, nRow, nColumn)) {
+                    if (bfsArray[nRow][nColumn] + 1 == bfsArray[row][column] && isValid(validityBoard, nRow, nColumn)) {
                         stack.push(neighbour);
                         childCount++;
                         validityBoard[nRow][nColumn] = true;
                     }
                 }
                 if (childCount > 1) {
-                   isUniquePath = false;
+                    isUniquePath = false;
                 }
             }
         }
