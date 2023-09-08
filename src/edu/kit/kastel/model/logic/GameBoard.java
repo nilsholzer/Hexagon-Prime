@@ -276,9 +276,10 @@ public class GameBoard {
     private boolean isWinnersToken(final int row, final int column, final Hexagon token) {
         List<Vector2D> sameNeighbours = getSameNeighbours(new Vector2D(column, row), token);
         int neighbours = sameNeighbours.size();
+        boolean hexagonOnEdge = isOnEdge(row, column);
         //If the hexagon has less than one neighbour on the edge or less than 2 neighbours in the middle of the board
         //There is no winning path including this hexagon.
-        if (!isOnEdge(row, column) && neighbours < 2 || isOnEdge(row, column) && neighbours < 1) {
+        if (!hexagonOnEdge && neighbours < 2 || hexagonOnEdge && neighbours < 1) {
             return false;
         }
         gameBoard[row][column] = token;
