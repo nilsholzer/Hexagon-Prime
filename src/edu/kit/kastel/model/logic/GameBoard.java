@@ -19,10 +19,8 @@ public class GameBoard {
     private static final String WHITESPACE = " ";
     private final int size;
     private final DepthFirstSearch dfs;
+    private final BreadthFirstSearch bfs;
     private final Hexagon[][] gameBoard;
-    // A 2D array needed to implement depth first search.
-    private final boolean[][] depthFirstSearchArray;
-    private final int[][] breadthFirstSearchArray;
     private final OvergoingClass overgoingClass;
     private int placeCount;
     /**
@@ -33,16 +31,13 @@ public class GameBoard {
         placeCount = 0;
         this.size = size;
         gameBoard = new Hexagon[this.size][this.size];
-        depthFirstSearchArray = new boolean[this.size][this.size];
-        breadthFirstSearchArray = new int[this.size][this.size];
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 gameBoard[row][column] = Hexagon.PLACEABLE;
-                depthFirstSearchArray[row][column] = false;
-                breadthFirstSearchArray[row][column] = -1;
             }
         }
         dfs = new DepthFirstSearch(this);
+        bfs = new BreadthFirstSearch(this);
         overgoingClass = new OvergoingClass(size);
     }
 
@@ -166,8 +161,8 @@ public class GameBoard {
      * @return todo.
      */
     public Vector2D shortestPathToEast(Vector2D coordinates) {
-        int[][] bfsArray = overgoingClass.deepCopyOfInt();
-        List<Vector2D> shortestPath = breadthFirstSearchArray(bfsArray, coordinates);
+        int[][] bfsArray = bfs.createNewBFSArray();
+        List<Vector2D> shortestPath = bfs.search(bfsArray, coordinates);
         if (shortestPath.isEmpty()) {
             return null;
         }

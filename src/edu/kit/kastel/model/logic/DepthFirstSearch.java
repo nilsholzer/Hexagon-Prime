@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class DepthFirstSearch implements SearchAlgorithm {
     private final GameBoard gameBoard;
-    private final Hexagon[][] graph;
     private final int borderLength;
     private final boolean[][] dfsArray;
 
@@ -26,8 +25,7 @@ public class DepthFirstSearch implements SearchAlgorithm {
      */
     public DepthFirstSearch(final GameBoard gameBoard) {
         this.gameBoard = gameBoard;
-        this.graph = gameBoard.getGraph();
-        this.borderLength = graph.length;
+        this.borderLength = gameBoard.getSize();
         dfsArray = new boolean[borderLength][borderLength];
         for (int row = 0; row < borderLength; row++) {
             for (int column = 0; column < borderLength; column++) {
