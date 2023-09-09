@@ -309,35 +309,6 @@ public class GameBoard {
     private boolean isOnEdge(final int row, final int column) {
         return row == 0 || column == 0 || row == size - 1 || column == size - 1;
     }
-    private List<Vector2D> breadthFirstSearchArray(final int[][] bfsArray, final Vector2D coordinates) {
-        Deque<Vector2D> queue = new ArrayDeque<>();
-        queue.push(coordinates);
-        bfsArray[coordinates.getyPos()][coordinates.getxPos()] = 0;
-        List<Vector2D> shortestPath = new ArrayList<>();
-        while (!queue.isEmpty()) {
-            Vector2D current = queue.poll();
-            int row = current.getyPos();
-            int column = current.getxPos();
-            if (column == size - 1) {
-                if (shortestPath.isEmpty()) {
-                    shortestPath.add(current);
-                } else if (bfsArray[shortestPath.get(0).getyPos()][column] == bfsArray[row][column]) {
-                    shortestPath.add(current);
-                } else {
-                    break;
-                }
-            }
-            for (Vector2D neighbour : getSameNeighbours(current, Hexagon.PLACEABLE)) {
-                int neighbourRow = neighbour.getyPos();
-                int neighbourColumn = neighbour.getxPos();
-                if (bfsArray[neighbourRow][neighbourColumn] == -1) {
-                    queue.addLast(neighbour);
-                    bfsArray[neighbourRow][neighbourColumn] = bfsArray[row][column] + 1;
-                }
-            }
-        }
-        return shortestPath;
-    }
     private Vector2D getCorrectVector(final List<Vector2D> list, int[][] bfsArray) {
         Vector2D correctVector = null;
         boolean[][] validityBoard = overgoingClass.deepCopyOfBoolean();
