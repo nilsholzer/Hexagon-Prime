@@ -218,7 +218,7 @@ public class GameBoard {
             if (gameBoard[0][column] != Hexagon.RED) {
                 continue;
             }
-            List<Vector2D> traversal = dfs.search(new Vector2D(0, column), Hexagon.RED);
+            List<Vector2D> traversal = dfs.search(new Vector2D(column, 0), Hexagon.RED);
             if (listIsWinnersPath(traversal, false)) {
                 winnersPath(traversal);
                 return true;
@@ -232,7 +232,7 @@ public class GameBoard {
             if (gameBoard[row][0] != Hexagon.BLUE) {
                 continue;
             }
-            List<Vector2D> traversal = dfs.search(new Vector2D(row, 0), Hexagon.BLUE);
+            List<Vector2D> traversal = dfs.search(new Vector2D(0, row), Hexagon.BLUE);
             if (listIsWinnersPath(traversal, true)) {
                 winnersPath(traversal);
                 return true;
