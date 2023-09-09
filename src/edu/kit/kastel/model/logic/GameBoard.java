@@ -18,6 +18,7 @@ import java.util.List;
 public class GameBoard {
     private static final String WHITESPACE = " ";
     private final int size;
+    private final DepthFirstSearch dfs;
     private final Hexagon[][] gameBoard;
     // A 2D array needed to implement depth first search.
     private final boolean[][] depthFirstSearchArray;
@@ -41,6 +42,7 @@ public class GameBoard {
                 breadthFirstSearchArray[row][column] = -1;
             }
         }
+        dfs = new DepthFirstSearch(this);
         overgoingClass = new OvergoingClass(size);
     }
 
@@ -172,6 +174,14 @@ public class GameBoard {
         return getCorrectVector(shortestPath, bfsArray);
     }
 
+    /**
+     * Todo.
+     * @return todo.
+     */
+    protected Hexagon[][] getGraph() {
+        return gameBoard.clone();
+    }
+
     //Gets all the neighbours from a hexagon with the given coordinates.
     private List<Vector2D> getNeighbours(final Vector2D coordinates) {
         int xPos = coordinates.getxPos();
@@ -208,7 +218,7 @@ public class GameBoard {
             if (gameBoard[0][column] != Hexagon.RED) {
                 continue;
             }
-            List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, 0), Hexagon.RED);
+            List<Vector2D> traversal = dfs.search(new Vector2D(0, column), Hexagon.RED);
             if (listIsWinnersPath(traversal, false)) {
                 winnersPath(traversal);
                 return true;
@@ -222,7 +232,7 @@ public class GameBoard {
             if (gameBoard[row][0] != Hexagon.BLUE) {
                 continue;
             }
-            List<Vector2D> traversal = depthFirstSearch(new Vector2D(0, row), Hexagon.BLUE);
+            List<Vector2D> traversal = dfs.search(new Vector2D(row, 0), Hexagon.BLUE);
             if (listIsWinnersPath(traversal, true)) {
                 winnersPath(traversal);
                 return true;
@@ -232,37 +242,12 @@ public class GameBoard {
     }
 
     /**
-     * Performs a depth first search on the game board.
-     * @param coordinates the root of the DFS
-     * @param token       the token, which is being searched for
-     * @return A List containing all the nodes, ,which are in the DFS-tree
+     * Todo.
+     * @param coordinates todo.
+     * @param token todo.
+     * @return  todo.
      */
-    private List<Vector2D> depthFirstSearch(final Vector2D coordinates, final Hexagon token) {
-        Deque<Vector2D> stack = new ArrayDeque<>();
-        //The stack, where every node, on which the DFS is applied to, is put in.
-        stack.push(coordinates);
-        //A board representing all the visited nodes in the DFS.
-        boolean[][] validityBoard = overgoingClass.deepCopyOfBoolean();
-        List<Vector2D> graph = new ArrayList<>();
-        while (!stack.isEmpty()) {
-            Vector2D current = stack.pop();
-            int row = current.getyPos();
-            int column = current.getxPos();
-            if (!isValid(validityBoard, row, column)) {
-                continue;
-            }
-            validityBoard[row][column] = true;
-            graph.add(current);
-            //It only adds neighbours to the stack, which have the same token as the root.
-            for (Vector2D neighbour : getSameNeighbours(current, token)) {
-                stack.push(neighbour);
-            }
-        }
-        return graph;
-    }
-
-    //Gets all the neighbours from a hexagon with the same token as the hexagon.
-    private List<Vector2D> getSameNeighbours(final Vector2D coordinates, Hexagon token) {
+    public List<Vector2D> getSameNeighbours(final Vector2D coordinates, Hexagon token) {
         List<Vector2D> neighbours = new ArrayList<>();
         for (Vector2D neighbour : getNeighbours(coordinates)) {
             if (gameBoard[neighbour.getyPos()][neighbour.getxPos()] == token) {
@@ -304,7 +289,7 @@ public class GameBoard {
             return false;
         }
         gameBoard[row][column] = token;
-        List<Vector2D> traversal = depthFirstSearch(new Vector2D(column, row), token);
+        List<Vector2D> traversal = dfs.search(new Vector2D(column, row), token);
         gameBoard[row][column] = Hexagon.PLACEABLE;
         return listIsWinnersPath(traversal, token == Hexagon.BLUE);
     }
