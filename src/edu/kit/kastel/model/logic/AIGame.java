@@ -77,6 +77,20 @@ public class AIGame extends Game {
     }
 
     /**
+     * Gets the point symmetric hexagon of the given hexagon coordinates.
+     * @param xPos the xPos of the hexagon
+     * @param yPos the yPos of the hexagon
+     * @return the point symmetric hexagon coordinates
+     */
+    public Vector2D getPointSymmetric(final int xPos, final int yPos) {
+        GameBoard gameBoard = getGameBoard();
+        int middle = (gameBoard.getSize() - 1) / 2;
+        int distXMiddle = middle - xPos;
+        int distYMiddle = middle - yPos;
+        return new Vector2D(middle + distXMiddle, middle + distYMiddle);
+    }
+
+    /**
      * Places a stone on the given coordinates on the gameboard, for the given player and updates the game after.
      * @param coordinates   the coordinates of the placed token
      * @param currentPlayer the player, who places the token

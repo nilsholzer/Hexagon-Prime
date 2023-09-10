@@ -10,7 +10,7 @@ import java.util.Deque;
 import java.util.List;
 
 /**
- * The DFS algorithm for {@link GameBoard undirected grpahs}.
+ * The DFS algorithm for {@link GameBoard undirected graphs}.
  * @author uhquw
  * @version 1.0.0
  */
