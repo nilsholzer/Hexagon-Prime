@@ -161,13 +161,13 @@ public class GameBoard {
      * @return todo.
      */
     public Vector2D getHeroAIMove(Vector2D root) {
-        return graphTraverser.getOptimalHexagon(root);
-        /*int[][] bfsArray = bfs.createNewBFSArray();
+        //return graphTraverser.getOptimalHexagon(root);
+        int[][] bfsArray = bfs.createNewBFSArray();
         List<Vector2D> shortestPath = bfs.search(bfsArray, root);
         if (shortestPath.isEmpty()) {
             return null;
         }
-        return getCorrectVector(shortestPath, bfsArray);*/
+        return getCorrectVector(shortestPath, bfsArray);
     }
 
     /**
