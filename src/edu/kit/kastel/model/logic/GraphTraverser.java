@@ -122,6 +122,7 @@ public class GraphTraverser {
 
     private Vector2D getCorrectHexagon(final Vector2D correctVector, final Vector2D root, final int[][] bfsArray,
                                        boolean[][] validityBoard) {
+        Vector2D result = correctVector;
         Deque<Vector2D> stack = new ArrayDeque<>();
         stack.push(root);
         while (!stack.isEmpty()) {
@@ -136,7 +137,8 @@ public class GraphTraverser {
                 uniquePath.add(current);
             }
             if (bfsArray[row][column] == 1) {
-                return moreWesternVector(correctVector, current);
+                result = moreWesternVector(correctVector, current);
+                continue;
             }
             List<Vector2D> neighbours = gameBoard.getSameNeighbours(current, Hexagon.PLACEABLE);
             setUniquePathFalse(neighbours.size());
@@ -148,7 +150,7 @@ public class GraphTraverser {
                 }
             }
         }
-        return null;
+        return result;
     }
 
     private boolean[][] createNewDFSArray() {
