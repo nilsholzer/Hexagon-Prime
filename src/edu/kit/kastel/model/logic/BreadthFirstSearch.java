@@ -16,6 +16,7 @@ import java.util.Queue;
  */
 public class BreadthFirstSearch {
     private final GameBoard gameBoard;
+    private final DepthFirstSearch dfs;
     private final int borderLength;
     private final int[][] bfsArray;
 
@@ -25,6 +26,7 @@ public class BreadthFirstSearch {
      */
     public BreadthFirstSearch(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
+        this.dfs = new DepthFirstSearch(gameBoard);
         this.borderLength = gameBoard.getSize();
         bfsArray = new int[borderLength][borderLength];
         for (int row = 0; row < borderLength; row++) {
@@ -32,6 +34,15 @@ public class BreadthFirstSearch {
                 bfsArray[row][column] = -1;
             }
         }
+    }
+
+    /**
+     * Todo.
+     * @param root todo
+     * @return todo
+     */
+    public Vector2D getOptionalHexagon(final Vector2D root) {
+        return root;
     }
 
     /**

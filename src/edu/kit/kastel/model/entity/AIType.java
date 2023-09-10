@@ -28,21 +28,17 @@ public enum AIType {
             Player aiPlayer = aiGame.getCurrentPlayer();
             Hexagon aiToken = aiPlayer.getToken();
             StringBuilder result = new StringBuilder();
-            int middle = (gameBoard.getSize() - 1) / 2;
-            int distXMiddle = middle - xPos;
-            int distYMiddle = middle - yPos;
-            int newXCoor = middle + distXMiddle;
-            int newYCoor = middle + distYMiddle;
+            Vector2D bogoPlacement = aiGame.getPointSymmetric(xPos, yPos);
             try {
-                gameBoard.place(new Vector2D(newXCoor, newYCoor), aiToken);
+                gameBoard.place(bogoPlacement, aiToken);
             } catch (PlaceException exception) {
-                Vector2D nextFreeHexagon = gameBoard.getNextFreeHexagon();
-                newXCoor = nextFreeHexagon.getxPos();
-                newYCoor = nextFreeHexagon.getyPos();
-                gameBoard.place(nextFreeHexagon, aiToken);
+                bogoPlacement = gameBoard.getNextFreeHexagon();
+                gameBoard.place(bogoPlacement, aiToken);
             }
-            aiGame.addTurn(new Vector2D(newXCoor, newYCoor), aiPlayer);
-            result.append(AI_PLACE_FORMAT.formatted(getName(), newXCoor, newYCoor)).append(aiGame.update());
+            aiGame.addTurn(bogoPlacement, aiPlayer);
+            xPos = bogoPlacement.getxPos();
+            yPos = bogoPlacement.getyPos();
+            result.append(AI_PLACE_FORMAT.formatted(getName(), xPos, yPos)).append(aiGame.update());
             return result.toString();
         }
     },
@@ -69,7 +65,7 @@ public enum AIType {
         }
 
         private Vector2D setVector(final Vector2D lastMove, GameBoard gameBoard, int turnCount, Game aiGame) {
-            Vector2D setVector = gameBoard.shortestPathToEast(lastMove);
+            Vector2D setVector = gameBoard.getHeroAIMove(lastMove);
             if (setVector != null) {
                 return setVector;
             }

@@ -20,6 +20,7 @@ public class GameBoard {
     private final int size;
     private final DepthFirstSearch dfs;
     private final BreadthFirstSearch bfs;
+    private final GraphTraverser graphTraverser;
     private final Hexagon[][] gameBoard;
     private final OvergoingClass overgoingClass;
     private int placeCount;
@@ -36,6 +37,7 @@ public class GameBoard {
                 gameBoard[row][column] = Hexagon.PLACEABLE;
             }
         }
+        graphTraverser = new GraphTraverser(this);
         dfs = new DepthFirstSearch(this);
         bfs = new BreadthFirstSearch(this);
         overgoingClass = new OvergoingClass(size);
@@ -160,7 +162,7 @@ public class GameBoard {
      * @param coordinates the coordinates of the starting hexagon
      * @return todo.
      */
-    public Vector2D shortestPathToEast(Vector2D coordinates) {
+    public Vector2D getHeroAIMove(Vector2D coordinates) {
         int[][] bfsArray = bfs.createNewBFSArray();
         List<Vector2D> shortestPath = bfs.search(bfsArray, coordinates);
         if (shortestPath.isEmpty()) {
@@ -213,7 +215,7 @@ public class GameBoard {
             if (gameBoard[0][column] != Hexagon.RED) {
                 continue;
             }
-            List<Vector2D> traversal = dfs.search(new Vector2D(column, 0), Hexagon.RED);
+            List<Vector2D> traversal = graphTraverser.dfs(new Vector2D(column, 0), Hexagon.RED);
             if (listIsWinnersPath(traversal, false)) {
                 winnersPath(traversal);
                 return true;
@@ -227,7 +229,7 @@ public class GameBoard {
             if (gameBoard[row][0] != Hexagon.BLUE) {
                 continue;
             }
-            List<Vector2D> traversal = dfs.search(new Vector2D(0, row), Hexagon.BLUE);
+            List<Vector2D> traversal = graphTraverser.dfs(new Vector2D(0, row), Hexagon.BLUE);
             if (listIsWinnersPath(traversal, true)) {
                 winnersPath(traversal);
                 return true;
@@ -284,7 +286,7 @@ public class GameBoard {
             return false;
         }
         gameBoard[row][column] = token;
-        List<Vector2D> traversal = dfs.search(new Vector2D(column, row), token);
+        List<Vector2D> traversal = graphTraverser.dfs(new Vector2D(column, row), token);
         gameBoard[row][column] = Hexagon.PLACEABLE;
         return listIsWinnersPath(traversal, token == Hexagon.BLUE);
     }
