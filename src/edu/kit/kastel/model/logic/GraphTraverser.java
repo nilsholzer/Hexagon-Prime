@@ -78,8 +78,9 @@ public class GraphTraverser {
         int[][] bfsArray = createNewBFSArray();
         List<Vector2D> shortestNodes = bfs(bfsArray, root);
         Vector2D optimalHexagon = null;
+        boolean[][] validityBoard = createNewDFSArray();
         for (Vector2D node : shortestNodes) {
-            optimalHexagon = getCorrectHexagon(optimalHexagon, node, bfsArray);
+            optimalHexagon = getCorrectHexagon(optimalHexagon, node, bfsArray, validityBoard);
         }
         if (isUniquePath && optimalHexagon != null) {
             optimalHexagon = mostWesternVector(uniquePath);
@@ -119,8 +120,8 @@ public class GraphTraverser {
         return shortestBorderNodes;
     }
 
-    private Vector2D getCorrectHexagon(final Vector2D correctVector, final Vector2D root, final int[][] bfsArray) {
-        boolean[][] validityBoard = createNewDFSArray();
+    private Vector2D getCorrectHexagon(final Vector2D correctVector, final Vector2D root, final int[][] bfsArray,
+                                       boolean[][] validityBoard) {
         Deque<Vector2D> stack = new ArrayDeque<>();
         stack.push(root);
         while (!stack.isEmpty()) {
