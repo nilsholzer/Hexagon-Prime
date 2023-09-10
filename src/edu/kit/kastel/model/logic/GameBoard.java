@@ -19,6 +19,7 @@ public class GameBoard {
     private static final String WHITESPACE = " ";
     private final int size;
     private final GraphTraverser graphTraverser;
+    private final BreadthFirstSearch bfs;
     private final Hexagon[][] gameBoard;
     private final OvergoingClass overgoingClass;
     private int placeCount;
@@ -35,6 +36,7 @@ public class GameBoard {
                 gameBoard[row][column] = Hexagon.PLACEABLE;
             }
         }
+        bfs = new BreadthFirstSearch(this);
         graphTraverser = new GraphTraverser(this);
         overgoingClass = new OvergoingClass(size);
     }
@@ -159,13 +161,13 @@ public class GameBoard {
      * @return todo.
      */
     public Vector2D getHeroAIMove(Vector2D root) {
-        return graphTraverser.getOptimalHexagon(root);
-        /*int[][] bfsArray = bfs.createNewBFSArray();
-        List<Vector2D> shortestPath = bfs.search(bfsArray, coordinates);
+        //return graphTraverser.getOptimalHexagon(root);
+        int[][] bfsArray = bfs.createNewBFSArray();
+        List<Vector2D> shortestPath = bfs.search(bfsArray, root);
         if (shortestPath.isEmpty()) {
             return null;
         }
-        return getCorrectVector(shortestPath, bfsArray);*/
+        return getCorrectVector(shortestPath, bfsArray);
     }
 
     /**
