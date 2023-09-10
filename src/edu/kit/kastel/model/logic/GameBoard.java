@@ -99,7 +99,7 @@ public class GameBoard {
             throw new PlaceException(xPos, yPos);
         } else {
             gameBoard[yPos][xPos] = token;
-            winnersBoard[xPos][yPos] = token;
+            winnersBoard[yPos][xPos] = token;
         }
         placeCount++;
     }
