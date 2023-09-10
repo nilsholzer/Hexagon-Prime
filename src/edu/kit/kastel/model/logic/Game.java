@@ -138,7 +138,7 @@ public abstract class Game implements Executable, HexCommands {
     public String update() {
         if (currentPlayer != null && gameBoard.isWinner(currentPlayer.getToken())) {
             quit();
-            return WINNER_FORMAT.formatted(currentPlayer.getName()) + ResultType.NEW_LINE_SYMBOL + print();
+            return WINNER_FORMAT.formatted(currentPlayer.getName()) + ResultType.NEW_LINE_SYMBOL + gameBoard.printWinner();
         }
         if (currentPlayer == player1) {
             currentPlayer = player2;

@@ -1,13 +1,10 @@
 package edu.kit.kastel.model.logic;
 
 import edu.kit.kastel.model.entity.Hexagon;
-import edu.kit.kastel.model.entity.OvergoingClass;
 import edu.kit.kastel.model.entity.Vector2D;
 import edu.kit.kastel.model.exceptions.PlaceException;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 /**
@@ -19,9 +16,8 @@ public class GameBoard {
     private static final String WHITESPACE = " ";
     private final int size;
     private final GraphTraverser graphTraverser;
-    private final BreadthFirstSearch bfs;
+    private final Hexagon[][] winnersBoard;
     private final Hexagon[][] gameBoard;
-    private final OvergoingClass overgoingClass;
     private int placeCount;
     /**
      * Constructs a new game board of a game of hex.
@@ -30,15 +26,15 @@ public class GameBoard {
     public GameBoard(final int size) {
         placeCount = 0;
         this.size = size;
-        gameBoard = new Hexagon[this.size][this.size];
+        gameBoard = new Hexagon[size][size];
+        winnersBoard = new Hexagon[size][size];
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 gameBoard[row][column] = Hexagon.PLACEABLE;
+                winnersBoard[row][column] = Hexagon.PLACEABLE;
             }
         }
-        bfs = new BreadthFirstSearch(this);
         graphTraverser = new GraphTraverser(this);
-        overgoingClass = new OvergoingClass(size);
     }
 
     /**
@@ -69,6 +65,27 @@ public class GameBoard {
         }
         return print.toString();
     }
+
+    /**
+     * Prints the game board and all its hexagons.
+     * @return A visualization of the game board and its hexagons
+     */
+    public String printWinner() {
+        StringBuilder print = new StringBuilder();
+        for (int row = 0; row < size; row++) {
+            print.append(WHITESPACE.repeat(row));
+            for (int column = 0; column < size; column++) {
+                print.append(winnersBoard[row][column].getSymbol());
+                if (column < size - 1) {
+                    print.append(WHITESPACE);
+                }
+            }
+            if (row < size - 1) {
+                print.append(System.lineSeparator());
+            }
+        }
+        return print.toString();
+    }
     /**
      * Places a token on the game board, if no other token is on that hexagon.
      * @param coordinates     the coordinates, where the token should be placed
@@ -82,6 +99,7 @@ public class GameBoard {
             throw new PlaceException(xPos, yPos);
         } else {
             gameBoard[yPos][xPos] = token;
+            winnersBoard[xPos][yPos] = token;
         }
         placeCount++;
     }
@@ -162,20 +180,6 @@ public class GameBoard {
      */
     public Vector2D getHeroAIMove(Vector2D root) {
         return graphTraverser.getOptimalHexagon(root);
-        /*int[][] bfsArray = bfs.createNewBFSArray();
-        List<Vector2D> shortestPath = bfs.search(bfsArray, root);
-        if (shortestPath.isEmpty()) {
-            return null;
-        }
-        return getCorrectVector(shortestPath, bfsArray);*/
-    }
-
-    /**
-     * Todo.
-     * @return todo.
-     */
-    protected Hexagon[][] getGraph() {
-        return gameBoard.clone();
     }
 
     //Gets all the neighbours from a hexagon with the given coordinates.
@@ -253,18 +257,13 @@ public class GameBoard {
         return neighbours;
     }
 
-    //Checks if the hexagon with the given coordinates is marked as visited in the DFS.
-    private boolean isValid(boolean[][] validityBoard, int row, int column) {
-        return !validityBoard[row][column];
-    }
-
     /**
      * Creates the path on the gameboard, that was used so the player could win.
      * @param traversal A list containing all the nodes that were visited on the path
      */
     private void winnersPath(List<Vector2D> traversal) {
         for (Vector2D node : traversal) {
-            gameBoard[node.getyPos()][node.getxPos()] = Hexagon.WINNER;
+            winnersBoard[node.getyPos()][node.getxPos()] = Hexagon.WINNER;
         }
     }
 
@@ -309,44 +308,5 @@ public class GameBoard {
     //Checks if the heaxagon with the given coordinates is on the edge of the gameboard.
     private boolean isOnEdge(final int row, final int column) {
         return row == 0 || column == 0 || row == size - 1 || column == size - 1;
-    }
-    private Vector2D getCorrectVector(final List<Vector2D> list, int[][] bfsArray) {
-        Vector2D correctVector = null;
-        boolean[][] validityBoard = overgoingClass.deepCopyOfBoolean();
-        boolean isUniquePath = list.size() == 1;
-        List<Vector2D> uniquePath = new ArrayList<>();
-        Deque<Vector2D> stack = new ArrayDeque<>();
-        for (Vector2D edge : list) {
-            stack.push(edge);
-            while (!stack.isEmpty()) {
-                Vector2D current = stack.pop();
-                int row = current.getyPos();
-                int column  = current.getxPos();
-                if (isUniquePath) {
-                    uniquePath.add(current);
-                }
-                if (bfsArray[row][column] == 1) {
-                    correctVector = overgoingClass.moreWestVector(correctVector, current);
-                    continue;
-                }
-                int childCount = 0;
-                for (Vector2D neighbour : getSameNeighbours(current, Hexagon.PLACEABLE)) {
-                    int nRow = neighbour.getyPos();
-                    int nColumn = neighbour.getxPos();
-                    if (bfsArray[nRow][nColumn] + 1 == bfsArray[row][column] && isValid(validityBoard, nRow, nColumn)) {
-                        stack.push(neighbour);
-                        childCount++;
-                        validityBoard[nRow][nColumn] = true;
-                    }
-                }
-                if (childCount > 1) {
-                    isUniquePath = false;
-                }
-            }
-        }
-        if (isUniquePath) {
-            correctVector = overgoingClass.westVector(uniquePath);
-        }
-        return correctVector;
     }
 }

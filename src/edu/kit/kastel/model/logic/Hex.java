@@ -4,9 +4,9 @@ import edu.kit.kastel.model.entity.Hexagon;
 import edu.kit.kastel.model.entity.Player;
 import edu.kit.kastel.model.entity.Vector2D;
 import edu.kit.kastel.model.exceptions.NewGameException;
+import edu.kit.kastel.model.exceptions.PlaceException;
 import edu.kit.kastel.model.exceptions.SwitchGamesException;
 import edu.kit.kastel.ui.ResultType;
-import edu.kit.kastel.ui.commands.PlaceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class Hex implements HexCommands {
         int yPos = coordinates.getyPos();
         //Throws IllegalArgumentException, if the given coordinates are out of bounds.
         if (xPos >= size || yPos >= size) {
-            throw new IllegalArgumentException(PlaceCommand.COORDINATE_INVALID_FORMAT.formatted(xPos, yPos));
+            throw new PlaceException();
         }
         return currentGame.place(coordinates);
     }

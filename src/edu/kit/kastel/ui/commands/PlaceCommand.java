@@ -1,6 +1,7 @@
 package edu.kit.kastel.ui.commands;
 
 import edu.kit.kastel.model.entity.Vector2D;
+import edu.kit.kastel.model.exceptions.PlaceException;
 import edu.kit.kastel.model.logic.GameBuilder;
 import edu.kit.kastel.model.logic.Hex;
 import edu.kit.kastel.ui.CommandHandler;
@@ -49,7 +50,7 @@ public class PlaceCommand extends HexCommand {
         Vector2D coordinates = new Vector2D(xPos, yPos);
         try {
             return new Result(ResultType.SUCCESS, hex.place(coordinates));
-        } catch (IllegalArgumentException exception) {
+        } catch (PlaceException exception) {
             return new Result(ResultType.FAILURE, exception.getMessage());
         }
     }
