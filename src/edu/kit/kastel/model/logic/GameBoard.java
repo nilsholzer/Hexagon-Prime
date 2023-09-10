@@ -157,11 +157,11 @@ public class GameBoard {
 
     /**
      * Finds the shortest path of free hexagons to the eastern border starting at the given coordinate.
-     * @param coordinates the coordinates of the starting hexagon
+     * @param root the coordinates of the starting hexagon
      * @return todo.
      */
-    public Vector2D getHeroAIMove(Vector2D coordinates) {
-        return graphTraverser.getOptimalHexagon(coordinates);
+    public Vector2D getHeroAIMove(Vector2D root) {
+        return graphTraverser.getOptimalHexagon(root);
         /*int[][] bfsArray = bfs.createNewBFSArray();
         List<Vector2D> shortestPath = bfs.search(bfsArray, coordinates);
         if (shortestPath.isEmpty()) {
