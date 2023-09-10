@@ -18,7 +18,6 @@ import java.util.List;
 public class GameBoard {
     private static final String WHITESPACE = " ";
     private final int size;
-    private final BreadthFirstSearch bfs;
     private final GraphTraverser graphTraverser;
     private final Hexagon[][] gameBoard;
     private final OvergoingClass overgoingClass;
@@ -37,7 +36,6 @@ public class GameBoard {
             }
         }
         graphTraverser = new GraphTraverser(this);
-        bfs = new BreadthFirstSearch(this);
         overgoingClass = new OvergoingClass(size);
     }
 
