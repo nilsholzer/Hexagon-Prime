@@ -32,7 +32,7 @@ public enum AIType {
             try {
                 gameBoard.place(bogoPlacement, aiToken);
             } catch (PlaceException exception) {
-                bogoPlacement = gameBoard.getNextFreeHexagon();
+                bogoPlacement = gameBoard.getBogoAIBasic();
                 gameBoard.place(bogoPlacement, aiToken);
             }
             aiGame.addTurn(bogoPlacement, aiPlayer);
@@ -54,7 +54,7 @@ public enum AIType {
             Vector2D setVector;
             StringBuilder result = new StringBuilder();
             if (aiGame.getTurnsSize() == 1) {
-                setVector = gameBoard.getEasternHexagon();
+                setVector = gameBoard.getHeroAIBasic();
             } else {
                 setVector = setVector(aiGame.getMove(2), gameBoard, 2, aiGame);
             }
@@ -72,7 +72,7 @@ public enum AIType {
             if (turnCount + 2 < aiGame.getTurnsSize()) {
                 return setVector(aiGame.getMove(turnCount + 2), gameBoard, turnCount + 2, aiGame);
             } else {
-                return gameBoard.getEasternHexagon();
+                return gameBoard.getHeroAIBasic();
             }
         }
     };

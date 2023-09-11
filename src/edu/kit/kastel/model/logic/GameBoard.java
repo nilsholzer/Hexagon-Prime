@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class GameBoard {
     private static final String WHITESPACE = " ";
+    private static final int THREE = 3;
     private final int size;
     private final GraphTraverser graphTraverser;
     private final Hexagon[][] winnersBoard;
@@ -129,7 +130,7 @@ public class GameBoard {
      *              Or {@code null} if there is no such coordinate
      */
     public Vector2D winInNextMove(Hexagon token) {
-        if (this.placeCount < (size * 2) - 2) {
+        if (this.placeCount < (size * 2) - THREE) {
             return null;
         }
         for (int column = 0; column < size; column++) {
@@ -145,9 +146,9 @@ public class GameBoard {
     /**
      * Gets the coordinates of the first vacancy along the rows of hexagons.
      * @return the coordinates of this hexagon
-     *         or{@code null} if there is no free hexagon on the gameboard, but in that case there is already a winner.
+     *         or {@code null} if there is no free hexagon on the gameboard, but in that case there is already a winner.
      */
-    public Vector2D getNextFreeHexagon() {
+    public Vector2D getBogoAIBasic() {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 if (gameBoard[row][column] == Hexagon.PLACEABLE) {
@@ -159,10 +160,11 @@ public class GameBoard {
     }
 
     /**
-     * Todo.
-     * @return Todo.
+     * Gets the coordinates of the first vacancy along the columns of hexagons.
+     * @return the coordinates of this hexagon
+     *         or {@code null} if there is no free hexagon on the gameboard, but in that case there is already a winner.
      */
-    public Vector2D getEasternHexagon() {
+    public Vector2D getHeroAIBasic() {
         for (int column = 0; column < size; column++) {
             for (int row = 0; row < size; row++) {
                 if (gameBoard[row][column] == Hexagon.PLACEABLE) {
@@ -176,7 +178,7 @@ public class GameBoard {
     /**
      * Finds the shortest path of free hexagons to the eastern border starting at the given coordinate.
      * @param root the coordinates of the starting hexagon
-     * @return todo.
+     * @return the most western hexagon of the shortest path to the eastern border
      */
     public Vector2D getHeroAIMove(Vector2D root) {
         return graphTraverser.getOptimalHexagon(root);
@@ -242,10 +244,10 @@ public class GameBoard {
     }
 
     /**
-     * Todo.
-     * @param coordinates todo.
-     * @param token todo.
-     * @return  todo.
+     * Gets all the neighbours of a hexagon, with the given token.
+     * @param coordinates the coordinates of the hexagon
+     * @param token the token, which the neighbours need to be listed
+     * @return all the neighbours of a hexagon, with the given token
      */
     public List<Vector2D> getSameNeighbours(final Vector2D coordinates, Hexagon token) {
         List<Vector2D> neighbours = new ArrayList<>();
