@@ -25,7 +25,7 @@ public class PlayersGame extends Game {
     @Override
     public String place(Vector2D coordinates) {
         if (!isActive()) {
-            throw new PlaceException();
+            throw new PlaceException(CANNOT_PLACE_AFTER_WIN);
         }
         Player currentPlayer = getCurrentPlayer();
         GameBoard gameBoard = getGameBoard();

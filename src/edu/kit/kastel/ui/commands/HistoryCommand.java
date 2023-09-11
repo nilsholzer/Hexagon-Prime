@@ -1,6 +1,6 @@
 package edu.kit.kastel.ui.commands;
 
-import edu.kit.kastel.model.exceptions.HistoryException;
+import edu.kit.kastel.model.exceptions.BasicCommandException;
 import edu.kit.kastel.model.logic.GameBuilder;
 import edu.kit.kastel.model.logic.Hex;
 import edu.kit.kastel.ui.CommandHandler;
@@ -45,7 +45,7 @@ public class HistoryCommand extends HexCommand {
         }
         try {
             return new Result(ResultType.SUCCESS, hex.history(turns));
-        } catch (HistoryException exception) {
+        } catch (BasicCommandException exception) {
             return new Result(ResultType.FAILURE, exception.getMessage());
         }
     }

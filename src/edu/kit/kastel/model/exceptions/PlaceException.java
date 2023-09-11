@@ -7,8 +7,6 @@ package edu.kit.kastel.model.exceptions;
  */
 public class PlaceException extends IllegalArgumentException {
     private static final String NOT_PLACEABLE = "There is already a token on (%d, %d)";
-    private static final String CANNOT_PLACE_AFTER_WIN = "You cannot place another hexagon, if a player has already won";
-
     /**
      * Constructs a new PlaceException, when the hexagon on the given coordinates is already occupied.
      * @param row    the row of the hexagon
@@ -20,8 +18,9 @@ public class PlaceException extends IllegalArgumentException {
 
     /**
      * Constructs a new PlaceException, when a player has already won a game.
+     * @param message the message of the exception
      */
-    public PlaceException() {
-        super(CANNOT_PLACE_AFTER_WIN);
+    public PlaceException(final String message) {
+        super(message);
     }
 }

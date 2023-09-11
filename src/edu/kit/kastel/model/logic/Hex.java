@@ -3,10 +3,10 @@ package edu.kit.kastel.model.logic;
 import edu.kit.kastel.model.entity.Hexagon;
 import edu.kit.kastel.model.entity.Player;
 import edu.kit.kastel.model.entity.Vector2D;
-import edu.kit.kastel.model.exceptions.NewGameException;
+import edu.kit.kastel.model.exceptions.BasicCommandException;
 import edu.kit.kastel.model.exceptions.PlaceException;
-import edu.kit.kastel.model.exceptions.SwitchGamesException;
 import edu.kit.kastel.ui.ResultType;
+import edu.kit.kastel.ui.commands.PlaceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,8 @@ public class Hex implements HexCommands {
     private static final String FIRST_NAME = "Prime";
     private static final String SWITCHED_GAME_FORMAT = "Switched to %s";
     private static final String AUTO_PRINT = "auto-print";
+    private static final String DUPLICATE_NAME_FORMAT = "There is already a game called %s";
+    private static final String INVALID_NAME_MESSAGE = "A game with that name does not exist";
     private final int size;
     private final String player1;
     private final String player2;
@@ -88,7 +90,7 @@ public class Hex implements HexCommands {
         int yPos = coordinates.getyPos();
         //Throws IllegalArgumentException, if the given coordinates are out of bounds.
         if (xPos >= size || yPos >= size) {
-            throw new PlaceException();
+            throw new PlaceException(PlaceCommand.COORDINATE_INVALID_FORMAT.formatted(xPos, yPos));
         }
         return currentGame.place(coordinates);
     }
@@ -125,12 +127,12 @@ public class Hex implements HexCommands {
      * Creates a new game and switches the current game to it.
      * @param name the name of the new Game
      * @return A confirmation of the successful creation of a new game
-     * @throws NewGameException when a game with this name already exists
+     * @throws BasicCommandException when a game with this name already exists
      */
     public String newGame(final String name) {
         for (Game game : games) {
             if (name.equals(game.getName())) {
-                throw new NewGameException(name);
+                throw new BasicCommandException(DUPLICATE_NAME_FORMAT.formatted(name));
             }
         }
         games.add(createGame(name));
@@ -142,12 +144,12 @@ public class Hex implements HexCommands {
      * Switches the current game to another game.
      * @param switchedGameName the name of the game to be switched to
      * @return A confirmation of the successful switch to another game
-     * @throws SwitchGamesException when a game with this name does not exist
+     * @throws BasicCommandException when a game with this name does not exist
      */
     public String switchGame(final String switchedGameName) {
         if (switchedGameName.equals(currentGame.getName())
                 || games.stream().noneMatch(game -> game.getName().equals(switchedGameName))) {
-            throw new SwitchGamesException();
+            throw new BasicCommandException(INVALID_NAME_MESSAGE);
         }
         for (Game switchedGame : games) {
             if (switchedGameName.equals(switchedGame.getName())) {

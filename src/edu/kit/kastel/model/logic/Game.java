@@ -2,8 +2,7 @@ package edu.kit.kastel.model.logic;
 
 import edu.kit.kastel.model.entity.Player;
 import edu.kit.kastel.model.entity.Vector2D;
-import edu.kit.kastel.model.exceptions.HistoryException;
-import edu.kit.kastel.model.exceptions.SwapException;
+import edu.kit.kastel.model.exceptions.BasicCommandException;
 import edu.kit.kastel.ui.ResultType;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -19,6 +18,9 @@ import java.util.Objects;
  * @version 1.0.2
  */
 public abstract class Game implements Executable, HexCommands {
+    protected static final String CANNOT_PLACE_AFTER_WIN = "You cannot place another hexagon, if a player has already won";
+    private static final String SWAP_ERROR_MESSAGE = "You cannot swap players this turn";
+    private static final String INVALID_TURN = "You cannot look at the last %s moves if the game only had %s moves";
     private static final String HISTORY_FORMAT = "%s: %d %d";
     private static final String SWAP_FORMAT = "%s swaps";
     private static final String TURN_FORMAT = "%s's turn";
@@ -66,7 +68,7 @@ public abstract class Game implements Executable, HexCommands {
     @Override
     public String history(final int turns) {
         if (turns > getTurnsSize()) {
-            throw new HistoryException(turns, getTurnsSize());
+            throw new BasicCommandException(INVALID_TURN.formatted(turns, getTurnsSize()));
         }
         StringBuilder result = new StringBuilder();
         // A list containing only the last 'turns' turns.
@@ -94,7 +96,7 @@ public abstract class Game implements Executable, HexCommands {
     @Override
     public String swap() {
         if (getTurnsSize() !=  1 || swapped) {
-            throw new SwapException();
+            throw new BasicCommandException(SWAP_ERROR_MESSAGE);
         }
         swapped = true;
         player1.swap();

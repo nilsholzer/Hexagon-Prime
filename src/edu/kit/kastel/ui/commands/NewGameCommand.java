@@ -1,6 +1,6 @@
 package edu.kit.kastel.ui.commands;
 
-import edu.kit.kastel.model.exceptions.NewGameException;
+import edu.kit.kastel.model.exceptions.BasicCommandException;
 import edu.kit.kastel.model.logic.Hex;
 import edu.kit.kastel.ui.CommandHandler;
 import edu.kit.kastel.ui.HexCommand;
@@ -30,7 +30,7 @@ public class NewGameCommand extends HexCommand {
     protected Result executeHexCommand(String[] commandArguments) {
         try {
             return new Result(ResultType.SUCCESS, hex.newGame(commandArguments[0]));
-        } catch (NewGameException exception) {
+        } catch (BasicCommandException exception) {
             return new Result(ResultType.FAILURE, exception.getMessage());
         }
     }
