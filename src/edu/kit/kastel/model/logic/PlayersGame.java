@@ -23,7 +23,7 @@ public class PlayersGame extends Game {
     }
 
     @Override
-    public String place(Vector2D coordinates) {
+    public String place(final Vector2D coordinates) {
         if (!isActive()) {
             throw new PlaceException(CANNOT_PLACE_AFTER_WIN);
         }

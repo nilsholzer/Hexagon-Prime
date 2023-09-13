@@ -11,7 +11,7 @@ public enum ResultType {
      */
     FAILURE() {
         @Override
-        public <T> void printResult(String formattedMessage, T... args) {
+        public <T> void printResult(final String formattedMessage, final T... args) {
             System.err.printf(ERROR + formattedMessage + NEW_LINE_SYMBOL, args);
         }
     },
@@ -20,7 +20,7 @@ public enum ResultType {
      */
     SUCCESS() {
         @Override
-        public <T> void printResult(String formattedMessage, T... args) {
+        public <T> void printResult(final String formattedMessage, final T... args) {
             System.out.printf(formattedMessage + NEW_LINE_SYMBOL, args);
         }
     };

@@ -189,7 +189,7 @@ public class GraphTraverser {
         }
     }
     //Gets the more western vector of the given one.
-    private Vector2D moreWesternVector(Vector2D current, Vector2D comparable) {
+    private Vector2D moreWesternVector(final Vector2D current, final Vector2D comparable) {
         if (current == null) {
             return comparable;
         }
@@ -204,7 +204,7 @@ public class GraphTraverser {
         }
     }
     //Gets the most western vector of a list of vectors.
-    private Vector2D mostWesternVector(List<Vector2D> list) {
+    private Vector2D mostWesternVector(final List<Vector2D> list) {
         Vector2D westVector = list.get(0);
         for (Vector2D vector2D : list) {
             westVector = moreWesternVector(westVector, vector2D);

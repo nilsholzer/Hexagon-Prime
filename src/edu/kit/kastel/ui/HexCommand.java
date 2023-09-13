@@ -22,14 +22,15 @@ public abstract class HexCommand extends Command {
      * @param hex                       the hex game
      * @param expectedNumberOfArguments the expected number of arguments
      */
-    protected HexCommand(String commandName, CommandHandler commandHandler, Hex hex, int expectedNumberOfArguments) {
+    protected HexCommand(final String commandName, final CommandHandler commandHandler, final Hex hex,
+                         final int expectedNumberOfArguments) {
         super(commandName, commandHandler);
         this.hex = Objects.requireNonNull(hex);
         this.expectedNumberOfArguments = expectedNumberOfArguments;
     }
 
     @Override
-    public final void execute(String[] commandArguments) {
+    public final void execute(final String[] commandArguments) {
         if (commandArguments.length != expectedNumberOfArguments && !optionalArguments()) {
             ResultType.FAILURE.printResult(NOT_EXPECTED_ARGS_LENGTH_ERROR, expectedNumberOfArguments,
                     commandArguments.length);

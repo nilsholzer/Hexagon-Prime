@@ -28,7 +28,7 @@ public class AIGame extends Game {
     }
 
     @Override
-    public String place(Vector2D coordinates) {
+    public String place(final Vector2D coordinates) {
         if (!isActive()) {
             throw new PlaceException(CANNOT_PLACE_AFTER_WIN);
         }
@@ -49,7 +49,7 @@ public class AIGame extends Game {
      * @param gameBoard    the game board, where the AI places its stone
      * @return A confirmation of the successful placement of the stone, or the successful swap
      */
-    private String aiPlace(Hexagon playersToken, GameBoard gameBoard) {
+    private String aiPlace(final Hexagon playersToken, final GameBoard gameBoard) {
         String aiName = aiType.getName();
         Player aiPlayer = getCurrentPlayer();
         Hexagon aiToken = aiPlayer.getToken();
@@ -97,7 +97,7 @@ public class AIGame extends Game {
      * @param gameBoard     the game board, where the token is placed on
      * @return An update, that it´s the next players turn or a winnning confirmation
      */
-    private String placeHexagon(Vector2D coordinates, Player currentPlayer, GameBoard gameBoard) {
+    private String placeHexagon(final Vector2D coordinates, final Player currentPlayer, final GameBoard gameBoard) {
         gameBoard.place(coordinates, currentPlayer.getToken());
         addTurn(coordinates, currentPlayer);
         return update();

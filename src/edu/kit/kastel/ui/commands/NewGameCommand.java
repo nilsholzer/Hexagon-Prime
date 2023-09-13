@@ -22,12 +22,12 @@ public class NewGameCommand extends HexCommand {
      * @param commandHandler the command handler
      * @param hex            the hex game
      */
-    public NewGameCommand(CommandHandler commandHandler, Hex hex) {
+    public NewGameCommand(final CommandHandler commandHandler, final Hex hex) {
         super(COMMAND_NAME, commandHandler, hex, COMMAND_ARGUMENTS);
     }
 
     @Override
-    protected Result executeHexCommand(String[] commandArguments) {
+    protected Result executeHexCommand(final String[] commandArguments) {
         try {
             return new Result(ResultType.SUCCESS, getHex().newGame(commandArguments[0]));
         } catch (BasicCommandException exception) {

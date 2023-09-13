@@ -21,7 +21,7 @@ public final class Main {
      * Main method used as entry point.
      * @param args command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Hex game;
         try {
             GameBuilder gameBuilder = new GameBuilder();

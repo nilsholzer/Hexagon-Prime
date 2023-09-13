@@ -18,7 +18,7 @@ public enum AIType {
      */
     BogoAI("BogoAI") {
         @Override
-        public String turn(AIGame aiGame) {
+        public String turn(final AIGame aiGame) {
             Vector2D playersLastMove = aiGame.getMove(1);
             int xPos = playersLastMove.getxPos();
             int yPos = playersLastMove.getyPos();
@@ -49,7 +49,7 @@ public enum AIType {
      */
     HeroAI("HeroAI") {
         @Override
-        public String turn(AIGame aiGame) {
+        public String turn(final AIGame aiGame) {
             GameBoard gameBoard = aiGame.getGameBoard();
             Player aiPlayer = aiGame.getCurrentPlayer();
             Hexagon aiToken = aiPlayer.getToken();
@@ -66,7 +66,7 @@ public enum AIType {
             return result.toString();
         }
         //Sets the vector according to HeroAI
-        private Vector2D setVector(final Vector2D lastMove, GameBoard gameBoard, int turnCount, Game aiGame) {
+        private Vector2D setVector(final Vector2D lastMove, final GameBoard gameBoard, final int turnCount, final Game aiGame) {
             Vector2D setVector = gameBoard.getHeroAIMove(lastMove);
             if (setVector != null) {
                 return setVector;

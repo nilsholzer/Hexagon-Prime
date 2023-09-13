@@ -26,7 +26,7 @@ public class PrintCommand extends HexCommand {
     }
 
     @Override
-    protected Result executeHexCommand(String[] commandArguments) {
+    protected Result executeHexCommand(final String[] commandArguments) {
         return new Result(ResultType.SUCCESS, getHex().print());
     }
 }

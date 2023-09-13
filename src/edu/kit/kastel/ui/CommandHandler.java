@@ -34,7 +34,7 @@ public final class CommandHandler {
      * Constructs a new CommandHandler.
       * @param hex the hex game that this instance manages
      */
-    public CommandHandler(Hex hex) {
+    public CommandHandler(final Hex hex) {
         this.hex = Objects.requireNonNull(hex);
         this.commands = new HashMap<>();
         this.initCommands();
@@ -64,7 +64,7 @@ public final class CommandHandler {
      * Executes the command according to the users input.
      * @param commandWithArguments The input of the user
      */
-    private void executeCommand(String commandWithArguments) {
+    private void executeCommand(final String commandWithArguments) {
         String[] splittedCommand = commandWithArguments.trim().split(COMMAND_SEPARATOR_REGEX);
         String commandName = splittedCommand[0];
         String[] commandArguments = Arrays.copyOfRange(splittedCommand, 1, splittedCommand.length);
@@ -95,7 +95,7 @@ public final class CommandHandler {
      * Adds a command to the command Map.
      * @param commmand the command being added
      */
-    private void addCommand(Command commmand) {
+    private void addCommand(final Command commmand) {
         this.commands.put(commmand.getCommandName(), commmand);
     }
 }

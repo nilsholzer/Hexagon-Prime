@@ -31,12 +31,12 @@ public class PlaceCommand extends HexCommand {
      * @param commandHandler the command handler
      * @param hex            the hex game
      */
-    public PlaceCommand(CommandHandler commandHandler, Hex hex) {
+    public PlaceCommand(final CommandHandler commandHandler, final Hex hex) {
         super(COMMAND_NAME, commandHandler, hex, COMMAND_ARGUMENTS);
     }
 
     @Override
-    protected Result executeHexCommand(String[] commandArguments) {
+    protected Result executeHexCommand(final String[] commandArguments) {
         Matcher matcher1 = GameBuilder.getNumberPattern().matcher(commandArguments[0]);
         Matcher matcher2 = GameBuilder.getNumberPattern().matcher(commandArguments[1]);
         if (!matcher1.matches() || !matcher2.matches()) {

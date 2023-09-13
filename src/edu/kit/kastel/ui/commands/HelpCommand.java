@@ -29,14 +29,14 @@ public class HelpCommand extends HexCommand {
      * @param commandHandler the command handler, where the command is being executed
      * @param hex            the game where the command is being executed
      */
-    public HelpCommand(CommandHandler commandHandler, Hex hex) {
+    public HelpCommand(final CommandHandler commandHandler, final Hex hex) {
         super(COMMAND_NAME, commandHandler, hex, EXPECTED_ARGUMENTS);
         commands = new TreeMap<>();
         this.initCommands();
     }
 
     @Override
-    protected Result executeHexCommand(String[] commandArguments) {
+    protected Result executeHexCommand(final String[] commandArguments) {
         return new Result(ResultType.SUCCESS, this.printCommands());
     }
 

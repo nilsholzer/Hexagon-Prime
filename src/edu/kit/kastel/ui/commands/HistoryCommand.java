@@ -26,12 +26,12 @@ public class HistoryCommand extends HexCommand {
      * @param commandHandler the command handler
      * @param hex            the hex game
      */
-    public HistoryCommand(CommandHandler commandHandler, Hex hex) {
+    public HistoryCommand(final CommandHandler commandHandler, final Hex hex) {
         super(COMMAND_NAME, commandHandler, hex, EXPECTED_ARGUMENTS);
     }
 
     @Override
-    protected Result executeHexCommand(String[] commandArguments) {
+    protected Result executeHexCommand(final String[] commandArguments) {
         int turns = 1;
         if (commandArguments.length == 1) {
             Matcher matcher = GameBuilder.getNumberPattern().matcher(commandArguments[0]);

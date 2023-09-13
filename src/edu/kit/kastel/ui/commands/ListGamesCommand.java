@@ -21,12 +21,12 @@ public class ListGamesCommand extends HexCommand {
      * @param commandHandler the command handler
      * @param hex            the hex game
      */
-    public ListGamesCommand(CommandHandler commandHandler, Hex hex) {
+    public ListGamesCommand(final CommandHandler commandHandler, final Hex hex) {
         super(COMMAND_NAME, commandHandler, hex, COMMAND_ARGUMENTS);
     }
 
     @Override
-    protected Result executeHexCommand(String[] commandArguments) {
+    protected Result executeHexCommand(final String[] commandArguments) {
         return new Result(ResultType.SUCCESS, getHex().listGames());
     }
 }

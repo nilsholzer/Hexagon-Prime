@@ -13,7 +13,7 @@ public class Result {
      * Constructs a new Result without a message.
      * @param type the type of the result
      */
-    public Result(ResultType type) {
+    public Result(final ResultType type) {
         this(type, null);
     }
 
@@ -22,7 +22,7 @@ public class Result {
      * @param type    the type of the result
      * @param message message to carry
      */
-    public Result(ResultType type, String message) {
+    public Result(final ResultType type, final String message) {
         this.type = type;
         this.message = message;
     }

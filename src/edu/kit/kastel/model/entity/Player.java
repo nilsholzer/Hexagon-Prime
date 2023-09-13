@@ -16,7 +16,7 @@ public class Player {
      * @param name  the name of the player
      * @param token the token the player can place on the game board
      */
-    public Player(String name, Hexagon token) {
+    public Player(final String name, final Hexagon token) {
         this.name = Objects.requireNonNull(name);
         this.token = token;
     }

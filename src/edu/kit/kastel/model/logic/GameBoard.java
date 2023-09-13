@@ -92,7 +92,7 @@ public class GameBoard {
      * @param token           the token planned to be placed on the game board
      * @throws PlaceException when there already is a token on these coordinates
      */
-    public void place(Vector2D coordinates, Hexagon token) {
+    public void place(final Vector2D coordinates, final Hexagon token) {
         int xPos = coordinates.getxPos();
         int yPos = coordinates.getyPos();
         if (gameBoard[yPos][xPos] != Hexagon.PLACEABLE) {
@@ -110,7 +110,7 @@ public class GameBoard {
      * @param token the token of the player, that is checked
      * @return      A boolean if the player is a winner
      */
-    public boolean isWinner(Hexagon token) {
+    public boolean isWinner(final Hexagon token) {
         if (this.placeCount < 2 * size - 1) {
             return false;
         }
@@ -128,7 +128,7 @@ public class GameBoard {
      * @return      The coordinates, that could lead to a win of the player, if his token is being placed on
      *              Or {@code null} if there is no such coordinate
      */
-    public Vector2D winInNextMove(Hexagon token) {
+    public Vector2D winInNextMove(final Hexagon token) {
         if (this.placeCount < ((size - 1) * 2) - 1) {
             return null;
         }
@@ -179,7 +179,7 @@ public class GameBoard {
      * @param root the coordinates of the starting hexagon
      * @return the most western hexagon of the shortest path to the eastern border
      */
-    public Vector2D getHeroAIMove(Vector2D root) {
+    public Vector2D getHeroAIMove(final Vector2D root) {
         return graphTraverser.getOptimalHexagon(root);
     }
 
@@ -248,7 +248,7 @@ public class GameBoard {
      * @param token the token, which the neighbours need to be listed
      * @return all the neighbours of a hexagon, with the given token
      */
-    public List<Vector2D> getSameNeighbours(final Vector2D coordinates, Hexagon token) {
+    public List<Vector2D> getSameNeighbours(final Vector2D coordinates, final Hexagon token) {
         List<Vector2D> neighbours = new ArrayList<>();
         for (Vector2D neighbour : getNeighbours(coordinates)) {
             if (gameBoard[neighbour.getyPos()][neighbour.getxPos()] == token) {
@@ -262,7 +262,7 @@ public class GameBoard {
      * Creates the path on the gameboard, that was used so the player could win.
      * @param traversal A list containing all the nodes that were visited on the path
      */
-    private void winnersPath(List<Vector2D> traversal) {
+    private void winnersPath(final List<Vector2D> traversal) {
         for (Vector2D node : traversal) {
             winnersBoard[node.getyPos()][node.getxPos()] = Hexagon.WINNER;
         }

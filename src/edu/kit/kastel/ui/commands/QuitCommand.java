@@ -21,12 +21,12 @@ public class QuitCommand extends HexCommand {
      * @param commandHandler the command handler, where the command is being executed
      * @param hex            the game where the command is being executed
      */
-    public QuitCommand(CommandHandler commandHandler, Hex hex) {
+    public QuitCommand(final CommandHandler commandHandler, final Hex hex) {
         super(COMMAND_NAME, commandHandler, hex, EXPECTED_ARGUMENTS);
     }
 
     @Override
-    protected Result executeHexCommand(String[] commandArguments) {
+    protected Result executeHexCommand(final String[] commandArguments) {
         getCommandHandler().quit();
         return null;
     }

@@ -16,7 +16,7 @@ public abstract class Command {
      * @param commandName    the name of the command
      * @param commandHandler the command handler
      */
-    protected Command(String commandName, CommandHandler commandHandler) {
+    protected Command(final String commandName, final CommandHandler commandHandler) {
         this.commandHandler = Objects.requireNonNull(commandHandler);
         this.commandName = Objects.requireNonNull(commandName);
     }
@@ -30,16 +30,16 @@ public abstract class Command {
     }
 
     /**
-     * Executes the command with the given arguments.
-     * @param commandArguments the arguments of the command
-     */
-    public abstract void execute(String[] commandArguments);
-
-    /**
      * Returns the command handler of the command.
      * @return the command handler
      */
     protected CommandHandler getCommandHandler() {
         return commandHandler;
     }
+
+    /**
+     * Executes the command with the given arguments.
+     * @param commandArguments the arguments of the command
+     */
+    public abstract void execute(String[] commandArguments);
 }

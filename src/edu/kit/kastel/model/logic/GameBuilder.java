@@ -34,7 +34,7 @@ public class GameBuilder {
      * @throws BuildException when the given arguments are wrong
      * @return                the explicit game of Hex
      */
-    public Hex buildGame(String[] arguments) {
+    public Hex buildGame(final String[] arguments) {
         if (arguments.length > MAXIMUM_ARGUMENTS || arguments.length < MINIMUM_ARGUMENTS) {
             throw new BuildException(ARGUMENT_SIZE_ERROR);
         }

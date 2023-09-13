@@ -22,7 +22,7 @@ public class SwitchGameCommand extends HexCommand {
      * @param commandHandler the command handler
      * @param hex            the hex game
      */
-    public SwitchGameCommand(CommandHandler commandHandler, Hex hex) {
+    public SwitchGameCommand(final CommandHandler commandHandler, final Hex hex) {
         super(COMMAND_NAME, commandHandler, hex, COMMAND_ARGUMENTS);
     }
 
