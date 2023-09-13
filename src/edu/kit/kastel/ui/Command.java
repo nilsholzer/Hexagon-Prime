@@ -36,7 +36,8 @@ public abstract class Command {
     public abstract void execute(String[] commandArguments);
 
     /**
-     * The command handler.
+     * Returns the command handler of the command.
+     * @return the command handler
      */
     protected CommandHandler getCommandHandler() {
         return commandHandler;
