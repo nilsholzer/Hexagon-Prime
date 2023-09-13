@@ -73,6 +73,7 @@ public class GraphTraverser {
      * Gets the optimal hexagon for HeroAI.
      * @param root The hexagon, where the search for the optimal hexagon starts
      * @return the optimal hexagon according to HeroAI
+     *         or {@code null} when there is no optimal hexagon
      */
     public Vector2D getOptimalHexagon(final Vector2D root) {
         int[][] bfsArray = createNewBFSArray();
@@ -88,6 +89,12 @@ public class GraphTraverser {
         return optimalHexagon;
     }
 
+    /**
+     * Performs a bfs over the graph, with a given root.
+     * @param bfsArray the bfs array containing the bfs numbers of the graph
+     * @param root      the root of the bfs spanning tree
+     * @return A list of Hexagons containing the vectors at the eastern boarder, with the lowest bfs number
+     */
     private List<Vector2D> bfs(final int[][] bfsArray, final Vector2D root) {
         Queue<Vector2D> bfsQueue = new ArrayDeque<>();
         bfsQueue.add(root);
@@ -120,6 +127,14 @@ public class GraphTraverser {
         return shortestBorderNodes;
     }
 
+    /**
+     * Performs a dfs starting at the root and traversing all the nodes with 1 less BFS number.
+     * @param correctVector the vector which is the correct Vector for HeroAI at the moment
+     * @param root          the root of the dfs spanning tree
+     * @param bfsArray      the bfs array containing the bfs number of every hexagon
+     * @param validityBoard the validity board, checking if a hexagon is visited or not
+     * @return the optimal hexagon for HeroAI at the moment
+     */
     private Vector2D getCorrectHexagon(final Vector2D correctVector, final Vector2D root, final int[][] bfsArray,
                                        boolean[][] validityBoard) {
         Vector2D result = correctVector;
@@ -173,7 +188,7 @@ public class GraphTraverser {
             this.isUniquePath = false;
         }
     }
-
+    //Gets the more western vector of the given one.
     private Vector2D moreWesternVector(Vector2D current, Vector2D comparable) {
         if (current == null) {
             return comparable;
@@ -188,7 +203,7 @@ public class GraphTraverser {
             return current;
         }
     }
-
+    //Gets the most western vector of a list of vectors.
     private Vector2D mostWesternVector(List<Vector2D> list) {
         Vector2D westVector = list.get(0);
         for (Vector2D vector2D : list) {

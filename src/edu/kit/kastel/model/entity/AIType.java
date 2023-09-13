@@ -63,14 +63,15 @@ public enum AIType {
             result.append(AI_PLACE_FORMAT.formatted(getName(), setVector.getxPos(), setVector.getyPos())).append(aiGame.update());
             return result.toString();
         }
-
+        //Sets the vector according to HeroAI
         private Vector2D setVector(final Vector2D lastMove, GameBoard gameBoard, int turnCount, Game aiGame) {
             Vector2D setVector = gameBoard.getHeroAIMove(lastMove);
             if (setVector != null) {
                 return setVector;
             }
             if (turnCount + 2 < aiGame.getTurnsSize()) {
-                return setVector(aiGame.getMove(turnCount + 2), gameBoard, turnCount + 2, aiGame);
+                Vector2D moveBefore = aiGame.getMove(turnCount + 2);
+                return setVector(moveBefore, gameBoard, turnCount + 2, aiGame);
             } else {
                 return gameBoard.getHeroAIBasic();
             }
