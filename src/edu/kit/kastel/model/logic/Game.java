@@ -38,11 +38,11 @@ public abstract class Game implements Executable, HexCommands {
 
     /**
      * Constructs a new game of Hex.
-     * @param name      the unique name of the game
-     * @param gameboardSize      the size of the game board
-     * @param player1   the first player, who needs to be a real person
-     * @param player2   the second player(AI or real person)
-     * @param autoPrint describes, if autoprint is enabled for the game
+     * @param name          the unique name of the game
+     * @param gameboardSize the size of the game board
+     * @param player1       the first player, who needs to be a real person
+     * @param player2       the second player(AI or real person)
+     * @param autoPrint     describes, if autoprint is enabled for the game
      */
     protected Game(final String name, final int gameboardSize, final Player player1, final Player player2, final boolean autoPrint) {
         this.name = Objects.requireNonNull(name);
