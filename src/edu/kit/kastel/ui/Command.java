@@ -8,10 +8,7 @@ import java.util.Objects;
  * @version 1.0.1
  */
 public abstract class Command {
-    /**
-     * The command handler.
-     */
-    protected final CommandHandler commandHandler;
+    private final CommandHandler commandHandler;
     private final String commandName;
 
     /**
@@ -37,4 +34,11 @@ public abstract class Command {
      * @param commandArguments the arguments of the command
      */
     public abstract void execute(String[] commandArguments);
+
+    /**
+     * The command handler.
+     */
+    protected CommandHandler getCommandHandler() {
+        return commandHandler;
+    }
 }

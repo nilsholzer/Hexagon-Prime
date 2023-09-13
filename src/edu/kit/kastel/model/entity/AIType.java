@@ -14,6 +14,7 @@ import edu.kit.kastel.ui.ResultType;
 public enum AIType {
     /**
      * Represents BogoAI and executes its move.
+     * The "no usage" notification of IntelliJ only appears, because BogoAI is never accesed by its name directly.
      */
     BogoAI("BogoAI") {
         @Override
@@ -44,6 +45,7 @@ public enum AIType {
     },
     /**
      * Represents HeroAI and executes its move.
+     * The "no usage" notification of IntelliJ only appears, because HeroAI is never accesed by its name directly.
      */
     HeroAI("HeroAI") {
         @Override

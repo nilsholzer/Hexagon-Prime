@@ -27,7 +27,7 @@ public class QuitCommand extends HexCommand {
 
     @Override
     protected Result executeHexCommand(String[] commandArguments) {
-        commandHandler.quit();
+        getCommandHandler().quit();
         return null;
     }
 }

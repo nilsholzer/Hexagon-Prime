@@ -7,7 +7,7 @@ package edu.kit.kastel.model.entity;
  */
 public enum Hexagon {
     /**
-     * Represents an empty hexagon on which stone can still be placed.
+     * Represents an empty hexagon on which a token can still be placed.
      */
     PLACEABLE("."),
     /**
