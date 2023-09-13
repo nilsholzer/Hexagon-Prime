@@ -29,7 +29,7 @@ public class SwapCommand extends HexCommand {
     @Override
     protected Result executeHexCommand(String[] commandArguments) {
         try {
-            return new Result(ResultType.SUCCESS, hex.swap());
+            return new Result(ResultType.SUCCESS, getHex().swap());
         } catch (BasicCommandException exception) {
             return new Result(ResultType.FAILURE, exception.getMessage());
         }

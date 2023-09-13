@@ -49,7 +49,7 @@ public class PlaceCommand extends HexCommand {
         }
         Vector2D coordinates = new Vector2D(xPos, yPos);
         try {
-            return new Result(ResultType.SUCCESS, hex.place(coordinates));
+            return new Result(ResultType.SUCCESS, getHex().place(coordinates));
         } catch (PlaceException exception) {
             return new Result(ResultType.FAILURE, exception.getMessage());
         }

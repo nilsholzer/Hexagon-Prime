@@ -10,16 +10,9 @@ import java.util.Objects;
  * @version 1.0.0
  */
 public abstract class HexCommand extends Command {
-    /**
-     * Standard output for a winner.
-     */
-    protected static final String WINNER_FORMAT = "%s wins!";
     private static final String NOT_EXPECTED_ARGS_LENGTH_ERROR = "Expected %d arguments but got %d";
     private static final String OPTIONAL_ARGS_LENGTH_ERROR = "Expected %d or less arguments but got %d";
-    /**
-     * The hex game.
-     */
-    protected final Hex hex;
+    private final Hex hex;
     private final int expectedNumberOfArguments;
 
     /**
@@ -65,4 +58,12 @@ public abstract class HexCommand extends Command {
      * @return                 the result of the command
      */
     protected abstract Result executeHexCommand(String[] commandArguments);
+
+    /**
+     * Returns the hex game of the hex command.
+     * @return the hex game
+     */
+    protected Hex getHex() {
+        return hex;
+    }
 }

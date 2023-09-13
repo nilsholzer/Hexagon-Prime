@@ -44,7 +44,7 @@ public class HistoryCommand extends HexCommand {
             }
         }
         try {
-            return new Result(ResultType.SUCCESS, hex.history(turns));
+            return new Result(ResultType.SUCCESS, getHex().history(turns));
         } catch (BasicCommandException exception) {
             return new Result(ResultType.FAILURE, exception.getMessage());
         }

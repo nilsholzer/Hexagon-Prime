@@ -27,6 +27,6 @@ public class ListGamesCommand extends HexCommand {
 
     @Override
     protected Result executeHexCommand(String[] commandArguments) {
-        return new Result(ResultType.SUCCESS, hex.listGames());
+        return new Result(ResultType.SUCCESS, getHex().listGames());
     }
 }

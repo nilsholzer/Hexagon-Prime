@@ -29,7 +29,7 @@ public class SwitchGameCommand extends HexCommand {
     @Override
     protected Result executeHexCommand(String[] commandArguments) {
         try {
-            return new Result(ResultType.SUCCESS, hex.switchGame(commandArguments[0]));
+            return new Result(ResultType.SUCCESS, getHex().switchGame(commandArguments[0]));
         } catch (BasicCommandException exception) {
             return new Result(ResultType.FAILURE, exception.getMessage());
         }
