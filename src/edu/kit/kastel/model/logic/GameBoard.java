@@ -14,7 +14,6 @@ import java.util.List;
  */
 public class GameBoard {
     private static final String WHITESPACE = " ";
-    private static final int THREE = 3;
     private final int size;
     private final GraphTraverser graphTraverser;
     private final Hexagon[][] winnersBoard;
@@ -130,7 +129,7 @@ public class GameBoard {
      *              Or {@code null} if there is no such coordinate
      */
     public Vector2D winInNextMove(Hexagon token) {
-        if (this.placeCount < (size * 2) - THREE) {
+        if (this.placeCount < ((size - 1) * 2) - 1) {
             return null;
         }
         for (int column = 0; column < size; column++) {
