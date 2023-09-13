@@ -111,7 +111,7 @@ public class GameBoard {
      * @return      A boolean if the player is a winner
      */
     public boolean isWinner(Hexagon token) {
-        if (this.placeCount < 2 * (size) - 1) {
+        if (this.placeCount < 2 * size - 1) {
             return false;
         }
         if (token == Hexagon.RED) {
