@@ -163,11 +163,9 @@ public class Hex implements HexCommands {
     private String autoPrintWelcome(final String gameName) {
         return gameName + System.lineSeparator() +  currentGame.update();
     }
-    //creates Player 1
     private Player createPlayer1() {
         return new Player(player1, Hexagon.RED);
     }
-    //creates Player 2
     private Player createPlayer2() {
         return new Player(player2, Hexagon.BLUE);
     }
